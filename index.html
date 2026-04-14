@@ -1121,3 +1121,196 @@ function renderDayDetail(ds) {
       </div>
     </div>`;
 }
+
+  function quickAddOnDay(ds) {
+  // Switch to list view, open the form, pre-fill due date
+  switchView('list');
+  document.getElementById('addTaskForm').classList.add('visible');
+  document.getElementById('newDue').value = ds;
+  document.getElementById('newTitle').focus();
+}
+
+
+// ── Page switcher (Dashboard vs AI) ──────────────────────────────────────────
+let currentPage = 'dashboard';
+
+function switchPage(page) {
+  currentPage = page;
+  const appLayout = document.querySelector('.app-layout');
+  const aiPage    = document.getElementById('aiPage');
+  const aiBtn     = document.getElementById('aiNavBtn');
+
+  if (page === 'ai') {
+    appLayout.style.display = 'none';
+    aiPage.classList.add('visible');
+    aiBtn.classList.add('nav-btn-primary');
+    aiBtn.classList.remove('nav-btn-ghost');
+    refreshApiKeyUI();
+  } else {
+    appLayout.style.display = 'grid';
+    aiPage.classList.remove('visible');
+    aiBtn.classList.remove('nav-btn-primary');
+    aiBtn.classList.add('nav-btn-ghost');
+  }
+}
+
+// ── OpenAI API key ────────────────────────────────────────────────────────────
+function saveApiKey() {
+  const key = document.getElementById('apiKeyInput').value.trim();
+  if (!key.startsWith('sk-')) return alert('Please enter a valid OpenAI key (starts with sk-)');
+  localStorage.setItem('openai_key', key);
+  refreshApiKeyUI();
+}
+
+function getApiKey() {
+  return localStorage.getItem('openai_key') || '';
+}
+
+function clearApiKey() {
+  localStorage.removeItem('openai_key');
+  refreshApiKeyUI();
+}
+
+function refreshApiKeyUI() {
+  const key    = getApiKey();
+  const banner = document.getElementById('apiKeyBanner');
+  const btns   = document.querySelectorAll('.ai-run-btn, #runAllBtn');
+
+  if (key) {
+    banner.classList.add('connected');
+    banner.innerHTML = `
+      <div class="api-key-icon">✅</div>
+      <div class="api-key-body">
+        <div class="api-key-title">OpenAI Connected</div>
+        <div class="api-key-sub">Key ending in ...${key.slice(-4)} is active. Your key stays in your browser only.</div>
+      </div>
+      <button class="api-key-clear" onclick="clearApiKey()">Disconnect</button>`;
+    btns.forEach(b => b.disabled = false);
+  } else {
+    banner.classList.remove('connected');
+    banner.innerHTML = `
+      <div class="api-key-icon">🔑</div>
+      <div class="api-key-body">
+        <div class="api-key-title">Connect your OpenAI key</div>
+        <div class="api-key-sub">Your key is stored only in your browser — never sent to our server.</div>
+        <div class="api-key-input-row">
+          <input class="api-key-input" type="password" id="apiKeyInput" placeholder="sk-...">
+          <button class="api-key-save" onclick="saveApiKey()">Connect</button>
+        </div>
+      </div>`;
+    btns.forEach(b => b.disabled = true);
+  }
+}
+
+// ── Build task context for AI ─────────────────────────────────────────────────
+function buildTaskContext() {
+  const todayD  = new Date();
+  const todayStr = today;
+  const incomplete = tasks.filter(t => !t.completed);
+  const completed  = tasks.filter(t => t.completed);
+  const overdue    = incomplete.filter(t => t.due_date < todayStr);
+  const postponed  = incomplete.filter(t => t.postponement_count >= 3);
+
+  const taskLines = incomplete.map(t => {
+    const daysUntil = Math.ceil((new Date(t.due_date) - todayD) / 86400000);
+    const rel = daysUntil < 0 ? `${Math.abs(daysUntil)} days OVERDUE` : daysUntil === 0 ? 'due TODAY' : `due in ${daysUntil} days`;
+    return `- "${t.title}" | priority: ${t.priority||'medium'} | ${rel} | postponed ${t.postponement_count}x`;
+  }).join('\n');
+
+  return `
+Today's date: ${todayStr}
+Total tasks: ${tasks.length} (${incomplete.length} incomplete, ${completed.length} completed)
+Overdue tasks: ${overdue.length}
+Heavily postponed tasks (3+ times): ${postponed.length}
+Completion streak: ${document.getElementById('streakNum').textContent} days
+
+INCOMPLETE TASKS:
+${taskLines || 'No incomplete tasks.'}
+
+COMPLETED THIS WEEK:
+${completed.filter(t => {
+    if (!t.completed_at) return false;
+    const d = new Date(t.completed_at);
+    const diff = (todayD - d) / 86400000;
+    return diff <= 7;
+  }).map(t => `- "${t.title}"`).join('\n') || 'None yet.'}
+`.trim();
+}
+
+// ── Prompts ───────────────────────────────────────────────────────────────────
+const AI_PROMPTS = {
+  burnout: (ctx) => `You are an academic wellness coach. Analyze this student's task data and provide a Burnout Risk assessment.
+
+${ctx}
+
+Respond with:
+1. A burnout risk SCORE from 0-100 on the very first line in this exact format: SCORE: [number]
+2. Then a brief assessment (3-4 sentences) explaining the score
+3. Then 3 specific, actionable steps to reduce burnout risk
+
+Be direct, empathetic, and practical. Use a warm, supportive tone.`,
+
+  overload: (ctx) => `You are an academic schedule optimizer. Analyze this student's task data and identify task overload issues.
+
+${ctx}
+
+Identify:
+1. Which specific days or periods are dangerously overloaded
+2. Which tasks are at highest risk of being missed
+3. Concrete recommendations to redistribute or reschedule work
+
+Format your response with clear sections. Be specific — mention actual task names and dates.`,
+
+  weekly: (ctx) => `You are a personal academic coach. Generate a Weekly Priorities Recap for this student.
+
+${ctx}
+
+Structure your response as:
+### This Week's Wins
+(celebrate completed tasks)
+
+### Top 3 Focus Areas for Next Week
+(most important incomplete tasks with reasoning)
+
+### Watch Out For
+(overdue or heavily postponed items needing urgent attention)
+
+### Quick Tip
+(one personalized productivity tip based on their patterns)
+
+Be encouraging, specific, and motivating.`,
+
+  schedule: (ctx) => `You are an expert study planner. Create an optimal 7-day study schedule for this student.
+
+${ctx}
+
+Create a day-by-day plan for the next 7 days. For each day:
+- Suggest which specific tasks to work on (use actual task names)
+- Recommend how long to spend on each
+- Include brief study technique tips where relevant
+
+Prioritize high-priority and overdue tasks first. Include buffer time. Format clearly with each day on a new section.`,
+
+  gpa: (ctx) => `You are an elite academic performance coach specializing in GPA maximization. Analyze this student's full task portfolio and create a comprehensive GPA Maximizer Plan.
+
+${ctx}
+
+Your plan must include:
+
+### GPA Impact Assessment
+Classify each incomplete task as HIGH/MEDIUM/LOW GPA impact and explain why.
+
+### The 20/80 Rule
+Identify the top 20% of tasks that will drive 80% of academic results. Tell them exactly which tasks to prioritize.
+
+### What to Drop, Delegate, or Defer
+Identify any tasks that can be dropped, minimized, or pushed without significantly hurting GPA.
+
+### 30-Day Academic Roadmap
+A week-by-week breakdown of what to focus on over the next 4 weeks for maximum GPA outcome.
+
+### Mindset & Strategy
+2-3 high-leverage study strategies personalized to their current patterns (based on postponement habits, overdue items, etc.)
+
+Be detailed, specific, and actionable. This should feel like advice from a $500/hour academic consultant.`
+};
