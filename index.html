@@ -377,6 +377,267 @@
   </div>
 </div>
 
+<!-- MAIN APP -->
+<div id="mainApp" style="display:none;">
+  <nav>
+    <div class="nav-logo">🔥 <span>Momentum</span></div>
+    <div class="nav-links">
+      <span style="font-size:13px;color:var(--brown-light);" id="navEmail"></span>
+      <button class="nav-btn nav-btn-ghost" onclick="switchPage('ai')" id="aiNavBtn">🤖 AI Advisor</button>
+      <button class="nav-btn nav-btn-ghost" id="adminLink" onclick="showAdminStats()" style="display:none;">Admin Panel</button>
+      <button class="nav-btn nav-btn-ghost" onclick="doLogout()">Log out</button>
+    </div>
+  </nav>
+
+  <div class="app-layout">
+    <div>
+
+      <!-- VIEW SWITCHER -->
+      <div class="view-switcher">
+        <button class="view-tab active" id="vtab-list" onclick="switchView('list')">📋 List</button>
+        <button class="view-tab" id="vtab-calendar" onclick="switchView('calendar')">📅 Calendar</button>
+        <button class="view-tab" id="vtab-ai" onclick="switchView('ai')">✨ AI Coach</button>
+      </div>
+      <!-- Streak -->
+      <div class="streak-card">
+        <div class="streak-label">Current Streak</div>
+        <div class="streak-number" id="streakNum">0</div>
+        <div class="streak-text" id="streakText">Day Streak 🔥</div>
+        <div class="streak-dots" id="streakDots"></div>
+      </div>
+
+      <!-- Tasks header -->
+      <div class="tasks-header">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="tasks-title">My Tasks</div>
+          <div class="task-count" id="taskCountLabel">0 tasks</div>
+        </div>
+        <button class="add-task-btn" onclick="toggleAddForm()">+ Add Task</button>
+      </div>
+
+      <!-- Filter tabs -->
+      <div class="filter-tabs">
+        <button class="filter-tab f-active" id="ftab-all"    onclick="setFilter('all')"   >All</button>
+        <button class="filter-tab"          id="ftab-high"   onclick="setFilter('high')"  >🔴 High</button>
+        <button class="filter-tab"          id="ftab-medium" onclick="setFilter('medium')">🟡 Medium</button>
+        <button class="filter-tab"          id="ftab-low"    onclick="setFilter('low')"   >🟢 Low</button>
+      </div>
+
+      <!-- Add form -->
+      <div class="add-task-form" id="addTaskForm">
+        <div class="form-row">
+          <div class="form-field" style="flex:2;">
+            <label>Task Title</label>
+            <input class="form-input" id="newTitle" placeholder="What needs to get done?" maxlength="100">
+          </div>
+          <div class="form-field">
+            <label>Due Date</label>
+            <input class="form-input" id="newDue" type="date">
+          </div>
+        </div>
+        <div class="form-field" style="margin-top:12px;">
+          <label>Priority</label>
+          <div class="priority-selector">
+            <button class="pri-btn" id="pribtn-high"   onclick="selectPriority('high')"  >🔴 High</button>
+            <button class="pri-btn sel-medium" id="pribtn-medium" onclick="selectPriority('medium')">🟡 Medium</button>
+            <button class="pri-btn" id="pribtn-low"    onclick="selectPriority('low')"   >🟢 Low</button>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-cancel" onclick="toggleAddForm()">Cancel</button>
+          <button class="btn-save" id="saveBtn" onclick="addTask()">Save Task</button>
+        </div>
+      </div>
+
+      <div class="task-list" id="taskList"></div>
+
+      <!-- CALENDAR VIEW -->
+      <div id="calendarView" style="display:none;">
+        <div class="calendar-wrap">
+          <div class="cal-nav">
+            <button class="cal-nav-btn" onclick="calPrev()">‹</button>
+            <div class="cal-month" id="calMonthLabel"></div>
+            <button class="cal-nav-btn" onclick="calNext()">›</button>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+          <div id="dayDetail" style="display:none;"></div>
+        </div>
+      </div>
+
+      <!-- AI COACH VIEW -->
+      <div id="aiView" style="display:none;">
+        <div class="ai-wrap">
+          <div class="ai-hero">
+            <div class="ai-hero-label">Powered by GPT-4o</div>
+            <div class="ai-hero-title">Your AI Academic Coach</div>
+            <div class="ai-hero-sub">Personalized feedback based on your real task data</div>
+          <div id="aiKeyStatus" style="margin-top:10px;font-size:12px;opacity:.8;"></div>
+          </div>
+
+          <!-- Quick stats -->
+          <div class="ai-stats-row" id="aiStatsRow"></div>
+
+          <!-- Mode selector -->
+          <div class="ai-mode-grid" id="aiModeGrid">
+            <button class="ai-mode-btn selected" data-mode="full" onclick="selectAiMode('full')">
+              <div class="ai-mode-icon">🎯</div>
+              <div class="ai-mode-title">Full Analysis</div>
+              <div class="ai-mode-desc">Everything: overload, GPA plan, burnout, weekly recap</div>
+            </button>
+            <button class="ai-mode-btn" data-mode="gpa" onclick="selectAiMode('gpa')">
+              <div class="ai-mode-icon">🏆</div>
+              <div class="ai-mode-title">GPA Maximizer</div>
+              <div class="ai-mode-desc">Prioritize tasks by academic impact to maximize grades</div>
+            </button>
+            <button class="ai-mode-btn" data-mode="schedule" onclick="selectAiMode('schedule')">
+              <div class="ai-mode-icon">📆</div>
+              <div class="ai-mode-title">Optimal Schedule</div>
+              <div class="ai-mode-desc">Day-by-day study plan for the next 7 days</div>
+            </button>
+            <button class="ai-mode-btn" data-mode="burnout" onclick="selectAiMode('burnout')">
+              <div class="ai-mode-icon">🔥</div>
+              <div class="ai-mode-title">Burnout Risk</div>
+              <div class="ai-mode-desc">Risk score 1–10 with personalized recovery tips</div>
+            </button>
+            <button class="ai-mode-btn" data-mode="weekly" onclick="selectAiMode('weekly')">
+              <div class="ai-mode-icon">📋</div>
+              <div class="ai-mode-title">Weekly Recap</div>
+              <div class="ai-mode-desc">Top priorities this week, ranked by urgency</div>
+            </button>
+          </div>
+
+          <button class="ai-run-btn" id="aiRunBtn" onclick="runAiFeedback()">
+            ✨ Generate My Plan
+          </button>
+
+          <div id="aiResult" style="display:none;"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <div class="sidebar-title">Overview</div>
+        <div class="stat-row"><span>Total Tasks</span><span class="stat-value" id="statTotal">0</span></div>
+        <div class="stat-row"><span>Completed</span><span class="stat-value" id="statDone">0</span></div>
+        <div class="stat-row"><span>Overdue</span><span class="stat-value" id="statOverdue" style="color:var(--red)">0</span></div>
+      </div>
+
+      <!-- Priority breakdown -->
+      <div class="sidebar-card">
+        <div class="sidebar-title">By Priority</div>
+        <div class="pri-bar-row">
+          <div class="pri-dot pri-dot-high"></div>
+          <div class="pri-bar-label">High</div>
+          <div class="pri-bar-count" id="priCountHigh">0</div>
+        </div>
+        <div class="pri-bar-row">
+          <div class="pri-dot pri-dot-medium"></div>
+          <div class="pri-bar-label">Medium</div>
+          <div class="pri-bar-count" id="priCountMedium">0</div>
+        </div>
+        <div class="pri-bar-row">
+          <div class="pri-dot pri-dot-low"></div>
+          <div class="pri-bar-label">Low</div>
+          <div class="pri-bar-count" id="priCountLow">0</div>
+        </div>
+      </div>
+
+      <div class="sidebar-card" style="background:linear-gradient(135deg,var(--amber-pale),var(--warm-white));">
+        <div class="sidebar-title">💡 Tip</div>
+        <div style="font-size:13.5px;color:var(--brown-mid);line-height:1.6;">Tackle your High priority tasks first thing — they're the ones that matter most!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── AI ADVISOR PAGE ─────────────────────────────────────── -->
+  <div class="ai-page" id="aiPage">
+    <div style="margin-bottom:20px;">
+      <button onclick="switchPage('dashboard')" style="display:flex;align-items:center;gap:8px;padding:9px 18px;border-radius:12px;border:1.5px solid rgba(61,43,31,.12);background:white;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;color:var(--brown-mid);" onmouseover="this.style.background='var(--amber-pale)';this.style.color='var(--brown)'" onmouseout="this.style.background='white';this.style.color='var(--brown-mid)'">
+        ← Back to Dashboard
+      </button>
+    </div>
+    <div class="api-key-banner" id="apiKeyBanner">
+      <div class="api-key-icon">🔑</div>
+      <div class="api-key-body">
+        <div class="api-key-title">Connect your OpenAI key</div>
+        <div class="api-key-sub">Your key is stored only in your browser — never sent to our server.</div>
+        <div class="api-key-input-row">
+          <input class="api-key-input" type="password" id="apiKeyInput" placeholder="sk-...">
+          <button class="api-key-save" onclick="saveApiKey()">Connect</button>
+        </div>
+      </div>
+    </div>
+    <button class="ai-run-all" id="runAllBtn" onclick="runAllAnalyses()" disabled>✨ Generate Full AI Report</button>
+    <div class="ai-grid">
+      <div class="ai-card">
+        <div class="ai-card-header"><div class="ai-card-icon">🔥</div><div class="ai-card-title">Burnout Risk Score</div></div>
+        <div class="ai-card-desc">Analyzes postponement patterns, overdue tasks, and workload density to estimate your burnout risk.</div>
+        <button class="ai-run-btn" id="btn-burnout" onclick="runAnalysis('burnout')" disabled>Analyze Risk</button>
+        <div class="ai-result" id="result-burnout">
+          <div id="score-burnout" style="display:none;">
+            <div class="score-meter">
+              <div class="score-bar-bg"><div class="score-bar-fill" id="burnout-bar" style="width:0%;background:#B91C1C;"></div></div>
+              <div class="score-label" id="burnout-score-label">—</div>
+            </div>
+          </div>
+          <div class="ai-result-inner" id="text-burnout"></div>
+        </div>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-header"><div class="ai-card-icon">⚠️</div><div class="ai-card-title">Task Overload Warning</div></div>
+        <div class="ai-card-desc">Detects overloaded days and weeks in your schedule and flags conflicts before they become a problem.</div>
+        <button class="ai-run-btn" id="btn-overload" onclick="runAnalysis('overload')" disabled>Check Overload</button>
+        <div class="ai-result" id="result-overload"><div class="ai-result-inner" id="text-overload"></div></div>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-header"><div class="ai-card-icon">📊</div><div class="ai-card-title">Weekly Priorities Recap</div></div>
+        <div class="ai-card-desc">A smart summary of what you accomplished this week and what deserves your focus next week.</div>
+        <button class="ai-run-btn" id="btn-weekly" onclick="runAnalysis('weekly')" disabled>Generate Recap</button>
+        <div class="ai-result" id="result-weekly"><div class="ai-result-inner" id="text-weekly"></div></div>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-header"><div class="ai-card-icon">📅</div><div class="ai-card-title">Optimal Study Schedule</div></div>
+        <div class="ai-card-desc">Builds a day-by-day study plan for the next 7 days, distributing your tasks for maximum retention.</div>
+        <button class="ai-run-btn" id="btn-schedule" onclick="runAnalysis('schedule')" disabled>Build Schedule</button>
+        <div class="ai-result" id="result-schedule"><div class="ai-result-inner" id="text-schedule"></div></div>
+      </div>
+      <div class="ai-card ai-card-wide">
+        <div class="ai-card-header"><div class="ai-card-icon">🎓</div><div class="ai-card-title">GPA Maximizer Plan</div></div>
+        <div class="ai-card-desc">Analyzes your full task list and creates a comprehensive academic plan — prioritizing high-impact work, identifying what to drop or delegate, and mapping a path to your best possible GPA.</div>
+        <button class="ai-run-btn" id="btn-gpa" onclick="runAnalysis('gpa')" disabled>Generate GPA Plan</button>
+        <div class="ai-result" id="result-gpa"><div class="ai-result-inner" id="text-gpa"></div></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- BREAKDOWN MODAL -->
+<div class="modal-overlay" id="breakdownModal">
+  <div class="modal">
+    <div class="modal-icon">😰</div>
+    <div class="modal-title">This task seems tough!</div>
+    <div class="modal-desc" id="breakdownDesc"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">Not Now</button>
+      <button class="btn-primary" onclick="breakdownTask()">Break It Down ✂️</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '';
+let currentUser      = null;
+let tasks            = [];
+let pendingWarnId    = null;
+let authMode         = 'login';
+let selectedPriority = 'medium';
+let activeFilter     = 'all';
+const today = new Date().toISOString().split('T')[0];
+
 // ── API helper ────────────────────────────────────────────────────────────────
 async function api(method, path, body) {
   if (location.protocol === 'file:') { showServerError(); return { ok:false, status:0, data:{error:'Not connected'} }; }
@@ -484,3 +745,379 @@ function enterApp() {
 }
 document.getElementById('authPass').addEventListener('keydown', e => { if(e.key==='Enter') handleAuth(); });
 
+// ── Tasks ─────────────────────────────────────────────────────────────────────
+async function loadTasks() {
+  const r = await api('GET', '/api/tasks');
+  if (!r.ok) return;
+  tasks = r.data;
+  renderAll();
+  const warned = tasks.find(t => t.postponement_count >= 3 && !t.completed);
+  if (warned) { pendingWarnId = warned.id; setTimeout(() => showBreakdownModal(warned), 600); }
+}
+
+function renderAll() { renderStreak(); renderTasks(); renderStats(); if (currentView === "calendar") renderCalendar(); }
+
+function renderStreak() {
+  const days  = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const dotsEl = document.getElementById('streakDots');
+  dotsEl.innerHTML = '';
+  let streak = 0;
+  for (let i = 0; i < 30; i++) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const ds = d.toISOString().split('T')[0];
+    const has = tasks.some(t => t.completed && t.completed_at && t.completed_at.startsWith(ds));
+    if (has) streak++; else if (i > 0) break;
+  }
+  document.getElementById('streakNum').textContent  = streak;
+  document.getElementById('streakText').textContent = streak > 1 ? 'Day Streak! Keep it up 🔥' : streak === 1 ? 'Day Streak! Keep going 🔥' : 'No streak yet — complete a task!';
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    const ds = d.toISOString().split('T')[0];
+    const has = tasks.some(t => t.completed && t.completed_at && t.completed_at.startsWith(ds));
+    const dot = document.createElement('div');
+    dot.className = 'streak-dot' + (has ? ' active' : '');
+    dot.innerHTML = `<div>${days[d.getDay()]}</div>`;
+    dotsEl.appendChild(dot);
+  }
+}
+
+function renderTasks() {
+  const list = document.getElementById('taskList');
+  list.innerHTML = '';
+
+  // Priority sort order
+  const pOrder = { high: 0, medium: 1, low: 2 };
+
+  // Apply filter then sort: priority first, then due date
+  const filtered = activeFilter === 'all' ? tasks : tasks.filter(t => (t.priority || 'medium') === activeFilter);
+  const sorted   = [...filtered].sort((a, b) => {
+    const pd = (pOrder[a.priority||'medium'] || 1) - (pOrder[b.priority||'medium'] || 1);
+    return pd !== 0 ? pd : a.due_date.localeCompare(b.due_date);
+  });
+
+  const incomplete = tasks.filter(t => !t.completed).length;
+  document.getElementById('taskCountLabel').textContent = `${incomplete} task${incomplete!==1?'s':''}`;
+
+  if (!sorted.length) {
+    list.innerHTML = `<div class="empty-state"><div class="empty-emoji">📝</div><div class="empty-title">${activeFilter==='all'?'No tasks yet!':'No '+activeFilter+' priority tasks.'}</div><div class="empty-sub">${activeFilter==='all'?'Create one to get started.':''}</div></div>`;
+    return;
+  }
+
+  sorted.forEach((t, i) => {
+    const pri      = t.priority || 'medium';
+    const isOverdue = !t.completed && t.due_date < today;
+    const isWarned  = t.postponement_count >= 3;
+    const card      = document.createElement('div');
+    card.className  = `task-card pri-${pri}${t.completed?' completed':''}${isWarned&&!t.completed?' warned':''}`;
+    card.style.animationDelay = `${i*0.04}s`;
+    const dueLabel  = t.due_date === today ? '📅 Due today' : `📅 ${fmtDate(t.due_date)}`;
+    const priLabels = { high:'🔴 High', medium:'🟡 Medium', low:'🟢 Low' };
+
+    card.innerHTML = `
+      <div class="task-checkbox${t.completed?' checked':''}" onclick="toggleTask(${t.id})"></div>
+      <div class="task-body">
+        <div class="task-title">${escHtml(t.title)}</div>
+        <div class="task-meta">
+          <span class="task-due${isOverdue?' overdue':''}">${dueLabel}</span>
+          <span class="pri-badge pri-badge-${pri}">${priLabels[pri]}</span>
+          ${isWarned&&!t.completed?`<span class="task-badge badge-warn">⚠️ Postponed ${t.postponement_count}x</span>`:''}
+          ${t.postponement_count>0&&t.postponement_count<3&&!t.completed?`<span class="postpone-count">Postponed ${t.postponement_count}x</span>`:''}
+        </div>
+        ${!t.completed ? `
+        <div class="pri-change" style="margin-top:6px;">
+          <button class="pri-change-btn${pri==='high'?' cur-high':''}"   onclick="changePriority(event,${t.id},'high')"  >High</button>
+          <button class="pri-change-btn${pri==='medium'?' cur-medium':''}" onclick="changePriority(event,${t.id},'medium')">Medium</button>
+          <button class="pri-change-btn${pri==='low'?' cur-low':''}"    onclick="changePriority(event,${t.id},'low')"   >Low</button>
+        </div>` : ''}
+      </div>
+      <button class="task-delete" onclick="removeTask(${t.id})" title="Delete">✕</button>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function renderStats() {
+  const incomplete = tasks.filter(t => !t.completed);
+  document.getElementById('statTotal').textContent   = tasks.length;
+  document.getElementById('statDone').textContent    = tasks.filter(t => t.completed).length;
+  document.getElementById('statOverdue').textContent = tasks.filter(t => !t.completed && t.due_date < today).length;
+  document.getElementById('priCountHigh').textContent   = incomplete.filter(t => (t.priority||'medium')==='high').length;
+  document.getElementById('priCountMedium').textContent = incomplete.filter(t => (t.priority||'medium')==='medium').length;
+  document.getElementById('priCountLow').textContent    = incomplete.filter(t => (t.priority||'medium')==='low').length;
+}
+
+// ── Priority ──────────────────────────────────────────────────────────────────
+function selectPriority(p) {
+  selectedPriority = p;
+  ['high','medium','low'].forEach(level => {
+    const btn = document.getElementById('pribtn-' + level);
+    btn.className = 'pri-btn' + (level === p ? ' sel-' + level : '');
+  });
+}
+
+function setFilter(f) {
+  activeFilter = f;
+  document.querySelectorAll('.filter-tab').forEach(b => b.className = 'filter-tab');
+  const tab = document.getElementById('ftab-' + f);
+  tab.classList.add(f === 'all' ? 'f-active' : 'f-active-' + f);
+  renderTasks();
+}
+
+async function changePriority(e, id, priority) {
+  e.stopPropagation();
+  const r = await api('PATCH', `/api/tasks/${id}/priority`, { priority });
+  if (!r.ok) return;
+  const idx = tasks.findIndex(t => t.id === id);
+  if (idx > -1) tasks[idx] = r.data;
+  renderAll();
+}
+
+// ── Task actions ──────────────────────────────────────────────────────────────
+async function toggleTask(id) {
+  const r = await api('POST', `/api/tasks/${id}/toggle`);
+  if (!r.ok) return;
+  const idx = tasks.findIndex(t => t.id === id);
+  if (idx > -1) tasks[idx] = r.data;
+  renderAll();
+}
+
+async function addTask() {
+  const title = document.getElementById('newTitle').value.trim();
+  const due   = document.getElementById('newDue').value;
+  if (!title || !due) return alert('Please enter a title and due date.');
+  document.getElementById('saveBtn').innerHTML = '<span class="spinner"></span>Saving…';
+  const r = await api('POST', '/api/tasks', { title, due_date: due, priority: selectedPriority });
+  document.getElementById('saveBtn').textContent = 'Save Task';
+  if (!r.ok) return alert(r.data.error || 'Failed to save task.');
+  tasks.push(r.data);
+  document.getElementById('newTitle').value = '';
+  document.getElementById('addTaskForm').classList.remove('visible');
+  selectPriority('medium'); // reset to default
+  renderAll();
+}
+
+async function removeTask(id) {
+  if (!confirm('Delete this task?')) return;
+  const r = await api('DELETE', `/api/tasks/${id}`);
+  if (!r.ok) return alert('Failed to delete task.');
+  tasks = tasks.filter(t => t.id !== id);
+  renderAll();
+}
+
+function toggleAddForm() {
+  // Always switch to list view first so the form is visible
+  if (currentView !== 'list') switchView('list');
+  const form = document.getElementById('addTaskForm');
+  form.classList.toggle('visible');
+  if (form.classList.contains('visible')) document.getElementById('newTitle').focus();
+}
+
+// ── Breakdown modal ───────────────────────────────────────────────────────────
+function showBreakdownModal(task) {
+  document.getElementById('breakdownDesc').textContent = `You've postponed "${task.title}" ${task.postponement_count} times. Would you like to break it into smaller, more manageable steps?`;
+  document.getElementById('breakdownModal').classList.add('visible');
+}
+function closeModal() {
+  document.getElementById('breakdownModal').classList.remove('visible');
+  pendingWarnId = null;
+}
+async function breakdownTask() {
+  closeModal();
+  const sub = prompt('Enter 2–5 subtask titles separated by commas:');
+  if (!sub || !pendingWarnId) return;
+  const parent = tasks.find(t => t.id === pendingWarnId);
+  const titles = sub.split(',').map(s=>s.trim()).filter(Boolean).slice(0,5);
+  for (const title of titles) {
+    const r = await api('POST', '/api/tasks', { title, due_date: parent.due_date, parent_task_id: parent.id, priority: parent.priority });
+    if (r.ok) tasks.push(r.data);
+  }
+  renderAll();
+}
+
+// ── Admin ─────────────────────────────────────────────────────────────────────
+async function showAdminStats() {
+  const [stats, users] = await Promise.all([api('GET','/api/admin/stats'), api('GET','/api/admin/users')]);
+  if (!stats.ok) return alert('Admin access denied.');
+  const s = stats.data;
+  const userList = users.data.map(u => `• ${u.email}${u.is_admin?' (admin)':''}`).join('\n');
+  alert(`📊 Admin Stats\n\nUsers: ${s.total_users}\nTasks: ${s.total_tasks}\nCompleted: ${s.completed_tasks}\n\n👥 All Users:\n${userList}`);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function fmtDate(ds) {
+  const d = new Date(ds + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+}
+function escHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+
+// ── View switcher ─────────────────────────────────────────────────────────────
+let currentView = 'list';
+function switchView(v) {
+  currentView = v;
+  document.getElementById('vtab-list').classList.toggle('active', v === 'list');
+  document.getElementById('vtab-calendar').classList.toggle('active', v === 'calendar');
+  document.getElementById('vtab-ai').classList.toggle('active', v === 'ai');
+  document.getElementById('taskList').style.display       = v === 'list'     ? 'flex'  : 'none';
+  document.getElementById('calendarView').style.display  = v === 'calendar' ? 'block' : 'none';
+  document.getElementById('aiView').style.display        = v === 'ai'       ? 'block' : 'none';
+  document.getElementById('addTaskForm').classList.remove('visible');
+  document.querySelector('.filter-tabs').style.display   = v === 'list'     ? 'flex'  : 'none';
+  if (v === 'calendar') renderCalendar();
+  if (v === 'ai')       renderAiStats();
+}
+
+// ── Calendar ──────────────────────────────────────────────────────────────────
+let calYear  = new Date().getFullYear();
+let calMonth = new Date().getMonth(); // 0-indexed
+let selectedDay = null;
+
+function calPrev() {
+  calMonth--;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  selectedDay = null;
+  renderCalendar();
+}
+function calNext() {
+  calMonth++;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  selectedDay = null;
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const months = ['January','February','March','April','May','June',
+                  'July','August','September','October','November','December'];
+  document.getElementById('calMonthLabel').textContent = `${months[calMonth]} ${calYear}`;
+
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  // Day headers
+  ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
+    const h = document.createElement('div');
+    h.className = 'cal-day-header';
+    h.textContent = d;
+    grid.appendChild(h);
+  });
+
+  // Build task map: date string → array of tasks
+  const taskMap = {};
+  tasks.forEach(t => {
+    if (!taskMap[t.due_date]) taskMap[t.due_date] = [];
+    taskMap[t.due_date].push(t);
+  });
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
+  const todayStr = today;
+
+  // Fill grid: prev month padding + current + next padding
+  const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+
+  for (let i = 0; i < totalCells; i++) {
+    let day, monthOffset = 0;
+    if (i < firstDay) {
+      day = daysInPrev - firstDay + 1 + i;
+      monthOffset = -1;
+    } else if (i >= firstDay + daysInMonth) {
+      day = i - firstDay - daysInMonth + 1;
+      monthOffset = 1;
+    } else {
+      day = i - firstDay + 1;
+    }
+
+    const cellDate = new Date(calYear, calMonth + monthOffset, day);
+    const ds = cellDate.toISOString().split('T')[0];
+    const isToday     = ds === todayStr;
+    const isOther     = monthOffset !== 0;
+    const isSelected  = ds === selectedDay;
+    const dayTasks    = taskMap[ds] || [];
+
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell' +
+      (isOther    ? ' other-month' : '') +
+      (isToday    ? ' today'       : '') +
+      (isSelected ? ' selected'    : '');
+    cell.onclick = () => selectDay(ds);
+
+    // Date number
+    const dateEl = document.createElement('div');
+    dateEl.className = 'cal-date';
+    dateEl.textContent = day;
+    cell.appendChild(dateEl);
+
+    // Task dots (max 3 visible)
+    const visible = dayTasks.slice(0, 3);
+    visible.forEach(t => {
+      const dot = document.createElement('div');
+      dot.className = `cal-task-dot pri-${t.priority||'medium'}${t.completed?' done':''}`;
+      dot.textContent = t.title;
+      cell.appendChild(dot);
+    });
+    if (dayTasks.length > 3) {
+      const more = document.createElement('div');
+      more.className = 'cal-more';
+      more.textContent = `+${dayTasks.length - 3} more`;
+      cell.appendChild(more);
+    }
+
+    grid.appendChild(cell);
+  }
+
+  // Re-render day detail if a day is selected
+  if (selectedDay) renderDayDetail(selectedDay);
+}
+
+function selectDay(ds) {
+  selectedDay = (selectedDay === ds) ? null : ds;
+  renderCalendar();
+  if (selectedDay) renderDayDetail(selectedDay);
+  else document.getElementById('dayDetail').style.display = 'none';
+}
+
+function renderDayDetail(ds) {
+  const panel = document.getElementById('dayDetail');
+  const dayTasks = tasks.filter(t => t.due_date === ds);
+  const d = new Date(ds + 'T00:00:00');
+  const label = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
+
+  if (!dayTasks.length) {
+    panel.style.display = 'block';
+    panel.innerHTML = `
+      <div class="day-detail">
+        <div class="day-detail-header">
+          <div class="day-detail-title">${label}</div>
+          <button class="day-detail-close" onclick="selectDay('${ds}')">×</button>
+        </div>
+        <div class="day-empty">No tasks due on this day.<br>
+          <button style="margin-top:10px;padding:7px 16px;border-radius:10px;border:none;background:var(--amber);color:white;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;" onclick="quickAddOnDay('${ds}')">+ Add task for this day</button>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const priLabels = { high:'🔴 High', medium:'🟡 Medium', low:'🟢 Low' };
+  const rows = dayTasks.map(t => `
+    <div class="day-task-row">
+      <div class="day-task-check${t.completed?' done':''}" onclick="toggleTask(${t.id});renderCalendar()"></div>
+      <div class="day-task-text${t.completed?' done':''}">${escHtml(t.title)}</div>
+      <span class="pri-badge pri-badge-${t.priority||'medium'}" style="flex-shrink:0">${priLabels[t.priority||'medium']}</span>
+    </div>`).join('');
+
+  panel.style.display = 'block';
+  panel.innerHTML = `
+    <div class="day-detail">
+      <div class="day-detail-header">
+        <div class="day-detail-title">${label} · ${dayTasks.length} task${dayTasks.length!==1?'s':''}</div>
+        <button class="day-detail-close" onclick="selectDay('${ds}')">×</button>
+      </div>
+      ${rows}
+      <div style="margin-top:12px;">
+        <button style="padding:7px 16px;border-radius:10px;border:none;background:var(--amber);color:white;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;" onclick="quickAddOnDay('${ds}')">+ Add task for this day</button>
+      </div>
+    </div>`;
+}
