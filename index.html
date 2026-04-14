@@ -376,3 +376,111 @@
     <button class="auth-submit" id="authSubmit" onclick="handleAuth()">Log In</button>
   </div>
 </div>
+
+// ── API helper ────────────────────────────────────────────────────────────────
+async function api(method, path, body) {
+  if (location.protocol === 'file:') { showServerError(); return { ok:false, status:0, data:{error:'Not connected'} }; }
+  try {
+    const opts = { method, headers:{'Content-Type':'application/json'}, credentials:'include' };
+    if (body) opts.body = JSON.stringify(body);
+    // 8-second timeout so the page never hangs forever
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 8000);
+    opts.signal = controller.signal;
+    const res  = await fetch(API + path, opts);
+    clearTimeout(timer);
+    const data = await res.json().catch(() => ({}));
+    return { ok: res.ok, status: res.status, data };
+  } catch(err) {
+    if (err.name !== 'AbortError') showServerError();
+    else showServerError(); // also show on timeout
+    return { ok:false, status:0, data:{error:'Cannot connect to server'} };
+  }
+}
+
+function showServerError() {
+  if (document.getElementById('serverBanner')) return;
+  const b = document.createElement('div');
+  b.id = 'serverBanner';
+  b.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:9999;background:#C0442A;color:white;text-align:center;padding:14px 20px;font-family:DM Sans,sans-serif;font-size:14px;line-height:1.6;';
+  b.innerHTML = location.protocol==='file:'
+    ? `⚠️ <strong>Open via Flask, not as a file.</strong> Run <code style="background:rgba(255,255,255,.2);padding:2px 6px;border-radius:4px;">python app.py</code> then visit <a href="http://localhost:5000" style="color:white;font-weight:700;">http://localhost:5000</a>`
+    : `⚠️ <strong>Cannot reach the server.</strong> Make sure Flask is running: <code style="background:rgba(255,255,255,.2);padding:2px 6px;border-radius:4px;">python app.py</code>`;
+  document.body.prepend(b);
+}
+
+// ── Auth ──────────────────────────────────────────────────────────────────────
+function switchTab(mode) {
+  authMode = mode;
+  document.getElementById('tabLogin').classList.toggle('active', mode==='login');
+  document.getElementById('tabRegister').classList.toggle('active', mode==='register');
+  document.getElementById('authSubmit').textContent = mode==='login' ? 'Log In' : 'Create Account';
+  hideAuthMsgs();
+}
+function hideAuthMsgs() {
+  document.getElementById('authError').style.display = 'none';
+  document.getElementById('authSuccess').style.display = 'none';
+}
+function showAuthError(msg) {
+  const el = document.getElementById('authError');
+  el.textContent = msg; el.style.display = 'block';
+  document.getElementById('authSuccess').style.display = 'none';
+}
+function showAuthSuccess(msg) {
+  const el = document.getElementById('authSuccess');
+  el.textContent = msg; el.style.display = 'block';
+  document.getElementById('authError').style.display = 'none';
+}
+async function handleAuth() {
+  const email = document.getElementById('authEmail').value.trim();
+  const pass  = document.getElementById('authPass').value;
+  hideAuthMsgs();
+  if (authMode === 'register') {
+    if (!email.includes('@')) return showAuthError('Enter a valid email.');
+    if (pass.length < 8)      return showAuthError('Password must be 8+ characters.');
+    const r = await api('POST', '/api/register', { email, password: pass });
+    if (!r.ok) return showAuthError(r.data.error || 'Registration failed.');
+    showAuthSuccess('Account created! You can now log in.');
+    switchTab('login');
+  } else {
+    const r = await api('POST', '/api/login', { email, password: pass });
+    if (!r.ok) return showAuthError(r.data.error || 'Login failed.');
+    currentUser = r.data.user;
+    enterApp();
+  }
+}
+async function doLogout() {
+  await api('POST', '/api/logout');
+  currentUser = null; tasks = [];
+  document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('authPage').classList.add('visible');
+  // Force clear — overcomes browser autofill
+  const emailEl = document.getElementById('authEmail');
+  const passEl  = document.getElementById('authPass');
+  emailEl.value = '';
+  passEl.value  = '';
+  emailEl.setAttribute('value', '');
+  passEl.setAttribute('value', '');
+  setTimeout(() => { emailEl.value = ''; passEl.value = ''; }, 50);
+  switchTab('login');
+}
+async function checkSession() {
+  const r = await api('GET', '/api/me');
+  if (r.ok) {
+    currentUser = r.data;
+    enterApp();
+  } else {
+    // Server not reachable — show login page normally (user just needs to log in)
+    document.getElementById('authPage').classList.add('visible');
+  }
+}
+function enterApp() {
+  document.getElementById('authPage').classList.remove('visible');
+  document.getElementById('mainApp').style.display = 'block';
+  document.getElementById('navEmail').textContent = currentUser.email;
+  if (currentUser.is_admin) document.getElementById('adminLink').style.display = 'inline-block';
+  document.getElementById('newDue').value = today;
+  loadTasks();
+}
+document.getElementById('authPass').addEventListener('keydown', e => { if(e.key==='Enter') handleAuth(); });
+
