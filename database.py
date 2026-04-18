@@ -15,7 +15,6 @@ def get_db():
     conn = sqlite3.connect(DB_PATH, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
-    conn.execute("PRAGMA journal_mode = WAL")   # WAL mode prevents lock conflicts
     return conn
 
 
@@ -251,12 +250,57 @@ def tick_overdue_postponements(user_id):
 
 
 def get_admin_stats():
+    """System-wide stats for the admin dashboard."""
     conn = get_db()
     row = conn.execute("""
         SELECT
-            (SELECT COUNT(*) FROM users)                     AS total_users,
-            (SELECT COUNT(*) FROM tasks)                     AS total_tasks,
-            (SELECT COUNT(*) FROM tasks WHERE completed = 1) AS completed_tasks
+            (SELECT COUNT(*) FROM users)                                            AS total_users,
+            (SELECT COUNT(*) FROM tasks)                                            AS total_tasks,
+            (SELECT COUNT(*) FROM tasks WHERE completed = 1)                        AS completed_tasks,
+            (SELECT COUNT(*) FROM tasks WHERE completed = 0)                        AS pending_tasks,
+            (SELECT COUNT(*) FROM tasks WHERE completed = 0
+                AND due_date < date('now'))                                         AS overdue_tasks,
+            (SELECT COUNT(*) FROM tasks WHERE postponement_count >= 3
+                AND completed = 0)                                                  AS at_risk_tasks,
+            (SELECT COUNT(*) FROM tasks WHERE priority = 'high')                    AS high_priority_tasks,
+            (SELECT ROUND(AVG(task_count), 1) FROM (
+                SELECT COUNT(*) AS task_count FROM tasks GROUP BY user_id))         AS avg_tasks_per_user,
+            (SELECT ROUND(AVG(done_count * 100.0 / NULLIF(total_count, 0)), 1)
+             FROM (SELECT
+                     COUNT(*) AS total_count,
+                     SUM(completed) AS done_count
+                   FROM tasks GROUP BY user_id))                                    AS avg_completion_rate
     """).fetchone()
     conn.close()
     return dict(row)
+
+
+def get_all_users_with_metrics():
+    """Admin: each user with their own task metrics."""
+    conn = get_db()
+    rows = conn.execute("""
+        SELECT
+            u.id,
+            u.email,
+            u.is_admin,
+            u.created_at,
+            COUNT(t.id)                                             AS total_tasks,
+            COALESCE(SUM(t.completed), 0)                          AS completed_tasks,
+            COALESCE(SUM(CASE WHEN t.completed = 0 THEN 1 END), 0) AS pending_tasks,
+            COALESCE(SUM(CASE WHEN t.completed = 0
+                AND t.due_date < date('now') THEN 1 END), 0)       AS overdue_tasks,
+            COALESCE(SUM(CASE WHEN t.postponement_count >= 3
+                AND t.completed = 0 THEN 1 END), 0)                AS at_risk_tasks,
+            COALESCE(SUM(CASE WHEN t.priority = 'high'
+                AND t.completed = 0 THEN 1 END), 0)                AS high_priority_pending,
+            CASE WHEN COUNT(t.id) > 0
+                THEN ROUND(SUM(t.completed) * 100.0 / COUNT(t.id), 0)
+                ELSE 0 END                                          AS completion_rate,
+            MAX(t.completed_at)                                     AS last_active
+        FROM users u
+        LEFT JOIN tasks t ON t.user_id = u.id
+        GROUP BY u.id
+        ORDER BY u.created_at DESC
+    """).fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
