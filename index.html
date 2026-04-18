@@ -70,7 +70,7 @@
   .btn-save { padding:9px 20px; border-radius:10px; border:none; background:var(--amber); color:white; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all .18s; }
   .btn-save:hover { background:var(--amber-light); }
 
-  /* PRIORITY SELECTOR (in form) */
+  /* PRIORITY SELECTOR */
   .priority-selector { display:flex; gap:6px; }
   .pri-btn { padding:6px 14px; border-radius:20px; border:1.5px solid rgba(61,43,31,0.12); background:white; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; cursor:pointer; transition:all .18s; color:var(--brown-mid); }
   .pri-btn:hover { border-color:var(--brown-light); }
@@ -85,12 +85,9 @@
   .task-card.completed { opacity:.6; }
   .task-card.completed .task-title { text-decoration:line-through; color:var(--brown-light); }
   .task-card.warned { border-color:rgba(192,68,42,.2); background:linear-gradient(135deg,var(--warm-white),#FFF5F3); }
-
-  /* Priority left border accent */
   .task-card.pri-high   { border-left:3px solid #B91C1C; }
   .task-card.pri-medium { border-left:3px solid #D97706; }
   .task-card.pri-low    { border-left:3px solid #059669; }
-
   .task-checkbox { width:22px; height:22px; border-radius:50%; border:2px solid rgba(61,43,31,.2); cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all .18s; background:white; }
   .task-checkbox:hover { border-color:var(--amber); }
   .task-checkbox.checked { background:var(--green); border-color:var(--green); }
@@ -103,14 +100,10 @@
   .task-badge { font-size:11px; font-weight:500; padding:2px 8px; border-radius:20px; }
   .badge-warn { background:var(--red-pale); color:var(--red); }
   .postpone-count { font-size:12px; color:var(--brown-light); }
-
-  /* Priority badge on card */
   .pri-badge { font-size:11px; font-weight:600; padding:2px 8px; border-radius:20px; }
   .pri-badge-high   { background:#FEE2E2; color:#B91C1C; }
   .pri-badge-medium { background:#FEF3C7; color:#92400E; }
   .pri-badge-low    { background:#D1FAE5; color:#065F46; }
-
-  /* Inline priority changer on card */
   .pri-change { display:none; gap:4px; }
   .task-card:hover .pri-change { display:flex; }
   .pri-change-btn { padding:2px 8px; border-radius:20px; border:1px solid rgba(61,43,31,.1); background:white; font-size:11px; font-weight:500; cursor:pointer; color:var(--brown-mid); transition:all .15s; }
@@ -118,7 +111,6 @@
   .pri-change-btn.cur-high   { background:#FEE2E2; color:#B91C1C; border-color:#B91C1C; }
   .pri-change-btn.cur-medium { background:#FEF3C7; color:#92400E; border-color:#D97706; }
   .pri-change-btn.cur-low    { background:#D1FAE5; color:#065F46; border-color:#059669; }
-
   .task-delete { background:none; border:none; cursor:pointer; color:var(--brown-light); font-size:14px; padding:4px; border-radius:6px; transition:all .18s; opacity:0; }
   .task-card:hover .task-delete { opacity:1; }
   .task-delete:hover { background:var(--red-pale); color:var(--red); }
@@ -130,8 +122,6 @@
   .stat-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid rgba(61,43,31,.06); font-size:14px; color:var(--brown-mid); }
   .stat-row:last-child { border-bottom:none; }
   .stat-value { font-family:'Fraunces',serif; font-size:20px; color:var(--brown); font-weight:700; }
-
-  /* Priority breakdown in sidebar */
   .pri-bar-row { display:flex; align-items:center; gap:8px; padding:6px 0; font-size:13px; color:var(--brown-mid); }
   .pri-bar-row:not(:last-child) { border-bottom:1px solid rgba(61,43,31,.06); }
   .pri-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
@@ -177,7 +167,6 @@
   .msg { padding:10px 14px; border-radius:10px; font-size:13px; margin-bottom:14px; display:none; }
   .msg-error { background:var(--red-pale); color:var(--red); }
   .msg-success { background:var(--green-pale); color:var(--green); }
-
   .spinner { display:inline-block; width:16px; height:16px; border:2px solid rgba(255,255,255,.4); border-top-color:white; border-radius:50%; animation:spin .6s linear infinite; vertical-align:middle; margin-right:6px; }
   @keyframes spin { to { transform:rotate(360deg); } }
 
@@ -208,8 +197,6 @@
   .cal-task-dot.pri-low    { background:#D1FAE5; color:#065F46; }
   .cal-task-dot.done       { opacity:.45; text-decoration:line-through; }
   .cal-more { font-size:10px; color:var(--brown-light); font-weight:500; margin-top:2px; }
-
-  /* DAY DETAIL PANEL */
   .day-detail { background:var(--warm-white); border:1px solid rgba(61,43,31,.08); border-radius:16px; padding:20px; margin-top:16px; animation:fadeSlideUp .2s ease both; }
   .day-detail-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
   .day-detail-title { font-family:'Fraunces',serif; font-size:17px; font-weight:500; }
@@ -225,127 +212,128 @@
   .day-task-text.done { text-decoration:line-through; color:var(--brown-light); }
   .day-empty { text-align:center; padding:20px; color:var(--brown-light); font-size:14px; }
 
-
-  /* ── AI FEEDBACK TAB ──────────────────────────────────────────────── */
+  /* AI COACH TAB */
   .ai-wrap { animation:fadeSlideUp .3s ease both; }
-  .ai-hero { background:linear-gradient(135deg,#1e1b4b 0%,#312e81 60%,#4338ca 100%);
-    border-radius:20px; padding:28px 32px; color:white; margin-bottom:20px; position:relative; overflow:hidden; }
-  .ai-hero::before { content:''; position:absolute; top:-60px; right:-60px; width:220px; height:220px;
-    background:rgba(139,92,246,.2); border-radius:50%; }
+  .ai-hero { background:linear-gradient(135deg,#1e1b4b 0%,#312e81 60%,#4338ca 100%); border-radius:20px; padding:28px 32px; color:white; margin-bottom:20px; position:relative; overflow:hidden; }
+  .ai-hero::before { content:''; position:absolute; top:-60px; right:-60px; width:220px; height:220px; background:rgba(139,92,246,.2); border-radius:50%; }
   .ai-hero::after  { content:'✨'; position:absolute; top:20px; right:28px; font-size:48px; opacity:.3; }
   .ai-hero-label { font-size:11px; font-weight:600; letter-spacing:2px; text-transform:uppercase; opacity:.6; margin-bottom:8px; }
   .ai-hero-title { font-family:'Fraunces',serif; font-size:28px; font-weight:700; line-height:1.2; margin-bottom:6px; }
   .ai-hero-sub   { font-size:14px; opacity:.75; }
-
   .ai-mode-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px; }
   @media(max-width:560px){ .ai-mode-grid{ grid-template-columns:1fr; } }
-  .ai-mode-btn {
-    background:var(--warm-white); border:1.5px solid rgba(61,43,31,.08);
-    border-radius:14px; padding:14px 16px; cursor:pointer; text-align:left;
-    transition:all .2s; font-family:'DM Sans',sans-serif;
-  }
+  .ai-mode-btn { background:var(--warm-white); border:1.5px solid rgba(61,43,31,.08); border-radius:14px; padding:14px 16px; cursor:pointer; text-align:left; transition:all .2s; font-family:'DM Sans',sans-serif; }
   .ai-mode-btn:hover { border-color:#818cf8; box-shadow:0 4px 16px rgba(99,102,241,.12); transform:translateY(-2px); }
   .ai-mode-btn.selected { border-color:#6366f1; background:linear-gradient(135deg,#eef2ff,#f5f3ff); }
   .ai-mode-icon  { font-size:24px; margin-bottom:6px; }
   .ai-mode-title { font-size:14px; font-weight:600; color:var(--brown); margin-bottom:2px; }
   .ai-mode-desc  { font-size:12px; color:var(--brown-light); line-height:1.4; }
-
-  .ai-run-btn {
-    width:100%; padding:14px; border:none; border-radius:14px; cursor:pointer;
-    background:linear-gradient(135deg,#6366f1,#8b5cf6);
-    color:white; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600;
-    transition:all .2s; margin-bottom:20px; display:flex; align-items:center; justify-content:center; gap:8px;
-  }
+  .ai-run-btn { width:100%; padding:14px; border:none; border-radius:14px; cursor:pointer; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:white; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; transition:all .2s; margin-bottom:20px; display:flex; align-items:center; justify-content:center; gap:8px; }
   .ai-run-btn:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 6px 20px rgba(99,102,241,.4); }
   .ai-run-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
-
-  .ai-result-card {
-    background:var(--warm-white); border:1px solid rgba(99,102,241,.15);
-    border-radius:16px; padding:24px; animation:fadeSlideUp .3s ease both;
-  }
+  .ai-result-card { background:var(--warm-white); border:1px solid rgba(99,102,241,.15); border-radius:16px; padding:24px; animation:fadeSlideUp .3s ease both; }
   .ai-result-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
   .ai-result-title { font-family:'Fraunces',serif; font-size:17px; font-weight:600; color:#4338ca; }
-  .ai-result-copy  { padding:5px 12px; border-radius:8px; border:1px solid rgba(99,102,241,.2);
-    background:white; color:#6366f1; font-size:12px; font-weight:500; cursor:pointer; transition:all .15s; }
+  .ai-result-copy  { padding:5px 12px; border-radius:8px; border:1px solid rgba(99,102,241,.2); background:white; color:#6366f1; font-size:12px; font-weight:500; cursor:pointer; transition:all .15s; }
   .ai-result-copy:hover { background:#eef2ff; }
   .ai-result-body { font-size:14px; line-height:1.8; color:var(--brown); white-space:pre-wrap; }
-  .ai-result-body strong { color:var(--brown); }
-
   .ai-stats-row { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; }
-  .ai-stat-chip  { background:var(--warm-white); border:1px solid rgba(61,43,31,.08); border-radius:12px;
-    padding:10px 14px; flex:1; min-width:80px; text-align:center; }
+  .ai-stat-chip  { background:var(--warm-white); border:1px solid rgba(61,43,31,.08); border-radius:12px; padding:10px 14px; flex:1; min-width:80px; text-align:center; }
   .ai-stat-num   { font-family:'Fraunces',serif; font-size:22px; font-weight:700; color:var(--brown); }
   .ai-stat-label { font-size:11px; color:var(--brown-light); margin-top:2px; }
   .ai-stat-chip.danger .ai-stat-num { color:var(--red); }
   .ai-stat-chip.warn   .ai-stat-num { color:#D97706; }
   .ai-stat-chip.good   .ai-stat-num { color:var(--green); }
+  .ai-spinner { width:18px; height:18px; border:2px solid rgba(255,255,255,.3); border-top-color:white; border-radius:50%; animation:spin .7s linear infinite; }
+  .ai-cursor { display:inline-block; width:2px; height:14px; background:#6366f1; margin-left:2px; vertical-align:middle; animation:blink .7s step-end infinite; }
+  @keyframes blink { 50% { opacity:0; } }
 
-  .ai-spinner { width:18px; height:18px; border:2px solid rgba(255,255,255,.3);
-    border-top-color:white; border-radius:50%; animation:spin .7s linear infinite; }
-
-
-  /* ── AI ADVISOR PAGE ─────────────────────────────────────────────── */
+  /* AI ADVISOR PAGE */
   .ai-page { display:none; max-width:900px; margin:0 auto; padding:32px 24px; }
   .ai-page.visible { display:block; }
-
-  .api-key-banner { display:flex; align-items:flex-start; gap:16px; background:var(--warm-white);
-    border:1.5px solid rgba(61,43,31,.1); border-radius:16px; padding:20px 24px; margin-bottom:24px; }
+  .api-key-banner { display:flex; align-items:flex-start; gap:16px; background:var(--warm-white); border:1.5px solid rgba(61,43,31,.1); border-radius:16px; padding:20px 24px; margin-bottom:24px; }
   .api-key-banner.connected { border-color:var(--green); background:var(--green-pale); }
   .api-key-icon  { font-size:28px; flex-shrink:0; }
   .api-key-body  { flex:1; }
   .api-key-title { font-family:'Fraunces',serif; font-size:16px; font-weight:600; margin-bottom:4px; }
   .api-key-sub   { font-size:13px; color:var(--brown-light); margin-bottom:10px; }
   .api-key-input-row { display:flex; gap:8px; }
-  .api-key-input { flex:1; padding:9px 14px; border:1.5px solid rgba(61,43,31,.15); border-radius:10px;
-    font-family:'DM Sans',sans-serif; font-size:13px; outline:none; }
+  .api-key-input { flex:1; padding:9px 14px; border:1.5px solid rgba(61,43,31,.15); border-radius:10px; font-family:'DM Sans',sans-serif; font-size:13px; outline:none; }
   .api-key-input:focus { border-color:var(--amber); }
-  .api-key-save  { padding:9px 18px; background:var(--amber); color:white; border:none;
-    border-radius:10px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; }
-  .api-key-clear { padding:7px 14px; background:transparent; color:var(--red); border:1.5px solid var(--red);
-    border-radius:10px; font-size:13px; cursor:pointer; margin-left:auto; white-space:nowrap; }
-
-  .ai-run-all { width:100%; padding:14px; margin-bottom:24px; border:none; border-radius:14px;
-    background:linear-gradient(135deg,#6366f1,#8b5cf6); color:white;
-    font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; cursor:pointer;
-    transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+  .api-key-save  { padding:9px 18px; background:var(--amber); color:white; border:none; border-radius:10px; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; }
+  .api-key-clear { padding:7px 14px; background:transparent; color:var(--red); border:1.5px solid var(--red); border-radius:10px; font-size:13px; cursor:pointer; margin-left:auto; white-space:nowrap; }
+  .ai-run-all { width:100%; padding:14px; margin-bottom:24px; border:none; border-radius:14px; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:white; font-family:'DM Sans',sans-serif; font-size:15px; font-weight:600; cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center; gap:8px; }
   .ai-run-all:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 6px 20px rgba(99,102,241,.35); }
   .ai-run-all:disabled { opacity:.5; cursor:not-allowed; }
-
   .ai-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
   @media(max-width:640px){ .ai-grid{ grid-template-columns:1fr; } }
-
-  .ai-card { background:var(--warm-white); border:1px solid rgba(61,43,31,.08);
-    border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:10px; }
+  .ai-card { background:var(--warm-white); border:1px solid rgba(61,43,31,.08); border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:10px; }
   .ai-card-wide { grid-column:1 / -1; }
   .ai-card-header { display:flex; align-items:center; gap:10px; }
   .ai-card-icon  { font-size:22px; }
   .ai-card-title { font-family:'Fraunces',serif; font-size:16px; font-weight:600; }
   .ai-card-desc  { font-size:13px; color:var(--brown-light); line-height:1.5; }
-
-  .ai-card .ai-run-btn { padding:9px 16px; border:none; border-radius:10px; cursor:pointer;
-    background:linear-gradient(135deg,#6366f1,#8b5cf6); color:white;
-    font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500;
-    transition:all .18s; display:flex; align-items:center; gap:6px; width:fit-content; }
+  .ai-card .ai-run-btn { padding:9px 16px; border:none; border-radius:10px; cursor:pointer; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:white; font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; transition:all .18s; display:flex; align-items:center; gap:6px; width:fit-content; margin-bottom:0; }
   .ai-card .ai-run-btn:hover:not(:disabled) { transform:translateY(-1px); box-shadow:0 4px 12px rgba(99,102,241,.3); }
   .ai-card .ai-run-btn:disabled { opacity:.5; cursor:not-allowed; }
-
   .ai-result { display:none; margin-top:4px; }
   .ai-result.visible { display:block; }
   .ai-result-inner { font-size:13.5px; line-height:1.75; color:var(--brown); }
-  .ai-result-inner h3 { font-family:'Fraunces',serif; font-size:15px; font-weight:600;
-    color:#4338ca; margin:14px 0 6px; }
+  .ai-result-inner h3 { font-family:'Fraunces',serif; font-size:15px; font-weight:600; color:#4338ca; margin:14px 0 6px; }
   .ai-result-inner strong { font-weight:600; color:var(--brown); }
   .ai-result-inner ul { padding-left:18px; margin:6px 0; }
   .ai-result-inner li { margin:3px 0; }
-
   .score-meter { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
   .score-bar-bg   { flex:1; height:10px; background:rgba(61,43,31,.08); border-radius:99px; overflow:hidden; }
   .score-bar-fill { height:100%; border-radius:99px; transition:width .8s cubic-bezier(.4,0,.2,1); }
   .score-label    { font-family:'Fraunces',serif; font-size:18px; font-weight:700; min-width:40px; text-align:right; }
 
-  .ai-cursor { display:inline-block; width:2px; height:14px; background:#6366f1;
-    margin-left:2px; vertical-align:middle; animation:blink .7s step-end infinite; }
-  @keyframes blink { 50% { opacity:0; } }
+  /* ADMIN PANEL */
+  .admin-page { display:none; max-width:960px; margin:0 auto; padding:32px 24px; }
+  .admin-page.visible { display:block; }
+  .admin-hero { background:linear-gradient(135deg,var(--brown) 0%,#2A1A0F 100%); border-radius:20px; padding:24px 32px; margin-bottom:24px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px; }
+  .admin-hero-left h1 { font-family:'Fraunces',serif; font-size:26px; font-weight:700; color:var(--amber); margin-bottom:4px; }
+  .admin-hero-left p { font-size:13px; color:var(--brown-light); }
+  .admin-back-btn { padding:9px 18px; border-radius:12px; border:1.5px solid rgba(250,246,240,.2); background:transparent; color:var(--cream); font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500; cursor:pointer; transition:all .18s; }
+  .admin-back-btn:hover { background:rgba(250,246,240,.1); }
+  .admin-stats-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:24px; }
+  @media(max-width:640px){ .admin-stats-grid{ grid-template-columns:repeat(2,1fr); } }
+  .admin-stat-card { background:var(--warm-white); border:1px solid rgba(61,43,31,.07); border-radius:14px; padding:18px 20px; }
+  .admin-stat-card.danger { border-color:rgba(192,68,42,.2); background:linear-gradient(135deg,var(--warm-white),#FFF5F3); }
+  .admin-stat-card.warn   { border-color:rgba(232,135,58,.2); background:linear-gradient(135deg,var(--warm-white),var(--amber-pale)); }
+  .admin-stat-card.good   { border-color:rgba(92,138,94,.2);  background:linear-gradient(135deg,var(--warm-white),var(--green-pale)); }
+  .admin-stat-num   { font-family:'Fraunces',serif; font-size:36px; font-weight:700; color:var(--brown); line-height:1; }
+  .admin-stat-card.danger .admin-stat-num { color:var(--red); }
+  .admin-stat-card.warn   .admin-stat-num { color:var(--amber); }
+  .admin-stat-card.good   .admin-stat-num { color:var(--green); }
+  .admin-stat-label { font-size:12px; color:var(--brown-light); margin-top:4px; font-weight:500; }
+  .admin-stat-sub   { font-size:11px; color:var(--gray); margin-top:2px; }
+  .admin-section-title { font-family:'Fraunces',serif; font-size:18px; font-weight:500; color:var(--brown); margin-bottom:14px; display:flex; align-items:center; gap:10px; }
+  .admin-section-badge { font-size:11px; background:var(--amber-pale); color:var(--amber); padding:3px 10px; border-radius:20px; font-family:'DM Sans',sans-serif; font-weight:600; }
+  .admin-table-wrap { background:var(--warm-white); border:1px solid rgba(61,43,31,.07); border-radius:16px; overflow:hidden; margin-bottom:24px; overflow-x:auto; }
+  .admin-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .admin-table thead th { background:var(--brown); color:white; padding:11px 14px; text-align:left; font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600; letter-spacing:.6px; text-transform:uppercase; white-space:nowrap; }
+  .admin-table tbody tr { border-bottom:1px solid rgba(61,43,31,.06); transition:background .15s; }
+  .admin-table tbody tr:last-child { border-bottom:none; }
+  .admin-table tbody tr:hover { background:var(--cream); }
+  .admin-table td { padding:12px 14px; color:var(--brown); vertical-align:middle; }
+  .admin-table td.muted { color:var(--brown-light); font-size:12px; }
+  .user-email { font-weight:500; display:flex; align-items:center; gap:6px; }
+  .admin-badge { background:var(--amber-pale); color:var(--amber); font-size:10px; font-weight:600; padding:2px 7px; border-radius:20px; }
+  .rate-bar-wrap { display:flex; align-items:center; gap:8px; }
+  .rate-bar-bg { flex:1; height:6px; background:rgba(61,43,31,.08); border-radius:99px; min-width:60px; }
+  .rate-bar-fill { height:6px; border-radius:99px; transition:width .5s ease; }
+  .rate-label { font-size:11px; font-weight:600; min-width:32px; text-align:right; color:var(--brown-mid); }
+  .risk-chip { font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; }
+  .risk-high   { background:var(--red-pale);   color:var(--red); }
+  .risk-medium { background:var(--amber-pale);  color:var(--amber); }
+  .risk-low    { background:var(--green-pale);  color:var(--green); }
+  .risk-none   { background:rgba(61,43,31,.06); color:var(--brown-light); }
+  .admin-del-btn { background:none; border:1.5px solid rgba(192,68,42,.2); border-radius:8px; color:var(--red); padding:4px 10px; font-size:12px; cursor:pointer; transition:all .18s; }
+  .admin-del-btn:hover { background:var(--red-pale); }
+  .admin-loading { text-align:center; padding:48px; color:var(--brown-light); font-size:14px; }
+  .admin-refresh-btn { padding:7px 16px; border-radius:10px; border:1.5px solid rgba(61,43,31,.1); background:white; color:var(--brown-mid); font-family:'DM Sans',sans-serif; font-size:13px; cursor:pointer; transition:all .18s; }
+  .admin-refresh-btn:hover { border-color:var(--amber); color:var(--amber); }
 
   @keyframes fadeSlideUp { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
   @keyframes fadeIn { from{opacity:0} to{opacity:1} }
@@ -384,21 +372,19 @@
     <div class="nav-links">
       <span style="font-size:13px;color:var(--brown-light);" id="navEmail"></span>
       <button class="nav-btn nav-btn-ghost" onclick="switchPage('ai')" id="aiNavBtn">🤖 AI Advisor</button>
-      <button class="nav-btn nav-btn-ghost" id="adminLink" onclick="showAdminStats()" style="display:none;">Admin Panel</button>
+      <button class="nav-btn nav-btn-ghost" id="adminLink" onclick="showAdminPage(true)" style="display:none;">Admin Panel</button>
       <button class="nav-btn nav-btn-ghost" onclick="doLogout()">Log out</button>
     </div>
   </nav>
 
   <div class="app-layout">
     <div>
-
-      <!-- VIEW SWITCHER -->
       <div class="view-switcher">
         <button class="view-tab active" id="vtab-list" onclick="switchView('list')">📋 List</button>
         <button class="view-tab" id="vtab-calendar" onclick="switchView('calendar')">📅 Calendar</button>
         <button class="view-tab" id="vtab-ai" onclick="switchView('ai')">✨ AI Coach</button>
       </div>
-      <!-- Streak -->
+
       <div class="streak-card">
         <div class="streak-label">Current Streak</div>
         <div class="streak-number" id="streakNum">0</div>
@@ -406,7 +392,6 @@
         <div class="streak-dots" id="streakDots"></div>
       </div>
 
-      <!-- Tasks header -->
       <div class="tasks-header">
         <div style="display:flex;align-items:center;gap:12px;">
           <div class="tasks-title">My Tasks</div>
@@ -415,7 +400,6 @@
         <button class="add-task-btn" onclick="toggleAddForm()">+ Add Task</button>
       </div>
 
-      <!-- Filter tabs -->
       <div class="filter-tabs">
         <button class="filter-tab f-active" id="ftab-all"    onclick="setFilter('all')"   >All</button>
         <button class="filter-tab"          id="ftab-high"   onclick="setFilter('high')"  >🔴 High</button>
@@ -423,7 +407,6 @@
         <button class="filter-tab"          id="ftab-low"    onclick="setFilter('low')"   >🟢 Low</button>
       </div>
 
-      <!-- Add form -->
       <div class="add-task-form" id="addTaskForm">
         <div class="form-row">
           <div class="form-field" style="flex:2;">
@@ -468,21 +451,17 @@
       <div id="aiView" style="display:none;">
         <div class="ai-wrap">
           <div class="ai-hero">
-            <div class="ai-hero-label">Powered by GPT-4o</div>
+            <div class="ai-hero-label">Powered by GPT-4o-mini</div>
             <div class="ai-hero-title">Your AI Academic Coach</div>
             <div class="ai-hero-sub">Personalized feedback based on your real task data</div>
-          <div id="aiKeyStatus" style="margin-top:10px;font-size:12px;opacity:.8;"></div>
+            <div id="aiKeyStatus" style="margin-top:10px;font-size:12px;opacity:.8;"></div>
           </div>
-
-          <!-- Quick stats -->
           <div class="ai-stats-row" id="aiStatsRow"></div>
-
-          <!-- Mode selector -->
           <div class="ai-mode-grid" id="aiModeGrid">
             <button class="ai-mode-btn selected" data-mode="full" onclick="selectAiMode('full')">
               <div class="ai-mode-icon">🎯</div>
               <div class="ai-mode-title">Full Analysis</div>
-              <div class="ai-mode-desc">Everything: overload, GPA plan, burnout, weekly recap</div>
+              <div class="ai-mode-desc">Quick overview: burnout risk, overload, top priorities, weekly recap</div>
             </button>
             <button class="ai-mode-btn" data-mode="gpa" onclick="selectAiMode('gpa')">
               <div class="ai-mode-icon">🏆</div>
@@ -505,15 +484,10 @@
               <div class="ai-mode-desc">Top priorities this week, ranked by urgency</div>
             </button>
           </div>
-
-          <button class="ai-run-btn" id="aiRunBtn" onclick="runAiFeedback()">
-            ✨ Generate My Plan
-          </button>
-
+          <button class="ai-run-btn" id="aiRunBtn" onclick="runAiFeedback()">✨ Generate My Plan</button>
           <div id="aiResult" style="display:none;"></div>
         </div>
       </div>
-
     </div>
 
     <!-- Sidebar -->
@@ -524,27 +498,12 @@
         <div class="stat-row"><span>Completed</span><span class="stat-value" id="statDone">0</span></div>
         <div class="stat-row"><span>Overdue</span><span class="stat-value" id="statOverdue" style="color:var(--red)">0</span></div>
       </div>
-
-      <!-- Priority breakdown -->
       <div class="sidebar-card">
         <div class="sidebar-title">By Priority</div>
-        <div class="pri-bar-row">
-          <div class="pri-dot pri-dot-high"></div>
-          <div class="pri-bar-label">High</div>
-          <div class="pri-bar-count" id="priCountHigh">0</div>
-        </div>
-        <div class="pri-bar-row">
-          <div class="pri-dot pri-dot-medium"></div>
-          <div class="pri-bar-label">Medium</div>
-          <div class="pri-bar-count" id="priCountMedium">0</div>
-        </div>
-        <div class="pri-bar-row">
-          <div class="pri-dot pri-dot-low"></div>
-          <div class="pri-bar-label">Low</div>
-          <div class="pri-bar-count" id="priCountLow">0</div>
-        </div>
+        <div class="pri-bar-row"><div class="pri-dot pri-dot-high"></div><div class="pri-bar-label">High</div><div class="pri-bar-count" id="priCountHigh">0</div></div>
+        <div class="pri-bar-row"><div class="pri-dot pri-dot-medium"></div><div class="pri-bar-label">Medium</div><div class="pri-bar-count" id="priCountMedium">0</div></div>
+        <div class="pri-bar-row"><div class="pri-dot pri-dot-low"></div><div class="pri-bar-label">Low</div><div class="pri-bar-count" id="priCountLow">0</div></div>
       </div>
-
       <div class="sidebar-card" style="background:linear-gradient(135deg,var(--amber-pale),var(--warm-white));">
         <div class="sidebar-title">💡 Tip</div>
         <div style="font-size:13.5px;color:var(--brown-mid);line-height:1.6;">Tackle your High priority tasks first thing — they're the ones that matter most!</div>
@@ -552,7 +511,7 @@
     </div>
   </div>
 
-  <!-- ── AI ADVISOR PAGE ─────────────────────────────────────── -->
+  <!-- AI ADVISOR PAGE -->
   <div class="ai-page" id="aiPage">
     <div style="margin-bottom:20px;">
       <button onclick="switchPage('dashboard')" style="display:flex;align-items:center;gap:8px;padding:9px 18px;border-radius:12px;border:1.5px solid rgba(61,43,31,.12);background:white;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;color:var(--brown-mid);" onmouseover="this.style.background='var(--amber-pale)';this.style.color='var(--brown)'" onmouseout="this.style.background='white';this.style.color='var(--brown-mid)'">
@@ -612,7 +571,21 @@
       </div>
     </div>
   </div>
+</div>
 
+<!-- ADMIN PANEL -->
+<div class="admin-page" id="adminPage">
+  <div class="admin-hero">
+    <div class="admin-hero-left">
+      <h1>🛠️ Admin Panel</h1>
+      <p id="adminWelcome">System overview and user management</p>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <button class="admin-refresh-btn" onclick="loadAdminDashboard()">↻ Refresh</button>
+      <button class="admin-back-btn" onclick="showAdminPage(false)">← Back to Dashboard</button>
+    </div>
+  </div>
+  <div id="adminContent"><div class="admin-loading">Loading admin data…</div></div>
 </div>
 
 <!-- BREAKDOWN MODAL -->
@@ -636,15 +609,20 @@ let pendingWarnId    = null;
 let authMode         = 'login';
 let selectedPriority = 'medium';
 let activeFilter     = 'all';
+let currentView      = 'list';
+let currentPage      = 'dashboard';
+let calYear          = new Date().getFullYear();
+let calMonth         = new Date().getMonth();
+let selectedDay      = null;
+let aiMode           = 'full';
 const today = new Date().toISOString().split('T')[0];
 
-// ── API helper ────────────────────────────────────────────────────────────────
+// ── API ───────────────────────────────────────────────────────────────────────
 async function api(method, path, body) {
   if (location.protocol === 'file:') { showServerError(); return { ok:false, status:0, data:{error:'Not connected'} }; }
   try {
     const opts = { method, headers:{'Content-Type':'application/json'}, credentials:'include' };
     if (body) opts.body = JSON.stringify(body);
-    // 8-second timeout so the page never hangs forever
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 8000);
     opts.signal = controller.signal;
@@ -653,8 +631,7 @@ async function api(method, path, body) {
     const data = await res.json().catch(() => ({}));
     return { ok: res.ok, status: res.status, data };
   } catch(err) {
-    if (err.name !== 'AbortError') showServerError();
-    else showServerError(); // also show on timeout
+    showServerError();
     return { ok:false, status:0, data:{error:'Cannot connect to server'} };
   }
 }
@@ -682,16 +659,9 @@ function hideAuthMsgs() {
   document.getElementById('authError').style.display = 'none';
   document.getElementById('authSuccess').style.display = 'none';
 }
-function showAuthError(msg) {
-  const el = document.getElementById('authError');
-  el.textContent = msg; el.style.display = 'block';
-  document.getElementById('authSuccess').style.display = 'none';
-}
-function showAuthSuccess(msg) {
-  const el = document.getElementById('authSuccess');
-  el.textContent = msg; el.style.display = 'block';
-  document.getElementById('authError').style.display = 'none';
-}
+function showAuthError(msg) { const el=document.getElementById('authError'); el.textContent=msg; el.style.display='block'; document.getElementById('authSuccess').style.display='none'; }
+function showAuthSuccess(msg) { const el=document.getElementById('authSuccess'); el.textContent=msg; el.style.display='block'; document.getElementById('authError').style.display='none'; }
+
 async function handleAuth() {
   const email = document.getElementById('authEmail').value.trim();
   const pass  = document.getElementById('authPass').value;
@@ -710,31 +680,28 @@ async function handleAuth() {
     enterApp();
   }
 }
+
 async function doLogout() {
   await api('POST', '/api/logout');
   currentUser = null; tasks = [];
   document.getElementById('mainApp').style.display = 'none';
+  document.getElementById('adminPage').classList.remove('visible');
   document.getElementById('authPage').classList.add('visible');
-  // Force clear — overcomes browser autofill
+  document.querySelector('.app-layout').style.display = 'grid';
   const emailEl = document.getElementById('authEmail');
   const passEl  = document.getElementById('authPass');
-  emailEl.value = '';
-  passEl.value  = '';
-  emailEl.setAttribute('value', '');
-  passEl.setAttribute('value', '');
-  setTimeout(() => { emailEl.value = ''; passEl.value = ''; }, 50);
+  emailEl.value = ''; passEl.value = '';
+  emailEl.setAttribute('value',''); passEl.setAttribute('value','');
+  setTimeout(() => { emailEl.value=''; passEl.value=''; }, 50);
   switchTab('login');
 }
+
 async function checkSession() {
   const r = await api('GET', '/api/me');
-  if (r.ok) {
-    currentUser = r.data;
-    enterApp();
-  } else {
-    // Server not reachable — show login page normally (user just needs to log in)
-    document.getElementById('authPage').classList.add('visible');
-  }
+  if (r.ok) { currentUser = r.data; enterApp(); }
+  else document.getElementById('authPage').classList.add('visible');
 }
+
 function enterApp() {
   document.getElementById('authPage').classList.remove('visible');
   document.getElementById('mainApp').style.display = 'block';
@@ -743,6 +710,7 @@ function enterApp() {
   document.getElementById('newDue').value = today;
   loadTasks();
 }
+
 document.getElementById('authPass').addEventListener('keydown', e => { if(e.key==='Enter') handleAuth(); });
 
 // ── Tasks ─────────────────────────────────────────────────────────────────────
@@ -755,15 +723,18 @@ async function loadTasks() {
   if (warned) { pendingWarnId = warned.id; setTimeout(() => showBreakdownModal(warned), 600); }
 }
 
-function renderAll() { renderStreak(); renderTasks(); renderStats(); if (currentView === "calendar") renderCalendar(); }
+function renderAll() {
+  renderStreak(); renderTasks(); renderStats();
+  if (currentView === 'calendar') renderCalendar();
+}
 
 function renderStreak() {
-  const days  = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const days = ['Su','Mo','Tu','We','Th','Fr','Sa'];
   const dotsEl = document.getElementById('streakDots');
   dotsEl.innerHTML = '';
   let streak = 0;
   for (let i = 0; i < 30; i++) {
-    const d = new Date(); d.setDate(d.getDate() - i);
+    const d = new Date(); d.setDate(d.getDate()-i);
     const ds = d.toISOString().split('T')[0];
     const has = tasks.some(t => t.completed && t.completed_at && t.completed_at.startsWith(ds));
     if (has) streak++; else if (i > 0) break;
@@ -771,7 +742,7 @@ function renderStreak() {
   document.getElementById('streakNum').textContent  = streak;
   document.getElementById('streakText').textContent = streak > 1 ? 'Day Streak! Keep it up 🔥' : streak === 1 ? 'Day Streak! Keep going 🔥' : 'No streak yet — complete a task!';
   for (let i = 6; i >= 0; i--) {
-    const d = new Date(); d.setDate(d.getDate() - i);
+    const d = new Date(); d.setDate(d.getDate()-i);
     const ds = d.toISOString().split('T')[0];
     const has = tasks.some(t => t.completed && t.completed_at && t.completed_at.startsWith(ds));
     const dot = document.createElement('div');
@@ -784,35 +755,27 @@ function renderStreak() {
 function renderTasks() {
   const list = document.getElementById('taskList');
   list.innerHTML = '';
-
-  // Priority sort order
-  const pOrder = { high: 0, medium: 1, low: 2 };
-
-  // Apply filter then sort: priority first, then due date
-  const filtered = activeFilter === 'all' ? tasks : tasks.filter(t => (t.priority || 'medium') === activeFilter);
-  const sorted   = [...filtered].sort((a, b) => {
-    const pd = (pOrder[a.priority||'medium'] || 1) - (pOrder[b.priority||'medium'] || 1);
+  const pOrder = { high:0, medium:1, low:2 };
+  const filtered = activeFilter === 'all' ? tasks : tasks.filter(t => (t.priority||'medium') === activeFilter);
+  const sorted = [...filtered].sort((a,b) => {
+    const pd = (pOrder[a.priority||'medium']||1) - (pOrder[b.priority||'medium']||1);
     return pd !== 0 ? pd : a.due_date.localeCompare(b.due_date);
   });
-
   const incomplete = tasks.filter(t => !t.completed).length;
   document.getElementById('taskCountLabel').textContent = `${incomplete} task${incomplete!==1?'s':''}`;
-
   if (!sorted.length) {
     list.innerHTML = `<div class="empty-state"><div class="empty-emoji">📝</div><div class="empty-title">${activeFilter==='all'?'No tasks yet!':'No '+activeFilter+' priority tasks.'}</div><div class="empty-sub">${activeFilter==='all'?'Create one to get started.':''}</div></div>`;
     return;
   }
-
-  sorted.forEach((t, i) => {
-    const pri      = t.priority || 'medium';
+  const priLabels = { high:'🔴 High', medium:'🟡 Medium', low:'🟢 Low' };
+  sorted.forEach((t,i) => {
+    const pri = t.priority||'medium';
     const isOverdue = !t.completed && t.due_date < today;
     const isWarned  = t.postponement_count >= 3;
-    const card      = document.createElement('div');
-    card.className  = `task-card pri-${pri}${t.completed?' completed':''}${isWarned&&!t.completed?' warned':''}`;
+    const card = document.createElement('div');
+    card.className = `task-card pri-${pri}${t.completed?' completed':''}${isWarned&&!t.completed?' warned':''}`;
     card.style.animationDelay = `${i*0.04}s`;
-    const dueLabel  = t.due_date === today ? '📅 Due today' : `📅 ${fmtDate(t.due_date)}`;
-    const priLabels = { high:'🔴 High', medium:'🟡 Medium', low:'🟢 Low' };
-
+    const dueLabel = t.due_date===today ? '📅 Due today' : `📅 ${fmtDate(t.due_date)}`;
     card.innerHTML = `
       <div class="task-checkbox${t.completed?' checked':''}" onclick="toggleTask(${t.id})"></div>
       <div class="task-body">
@@ -823,43 +786,39 @@ function renderTasks() {
           ${isWarned&&!t.completed?`<span class="task-badge badge-warn">⚠️ Postponed ${t.postponement_count}x</span>`:''}
           ${t.postponement_count>0&&t.postponement_count<3&&!t.completed?`<span class="postpone-count">Postponed ${t.postponement_count}x</span>`:''}
         </div>
-        ${!t.completed ? `
-        <div class="pri-change" style="margin-top:6px;">
-          <button class="pri-change-btn${pri==='high'?' cur-high':''}"   onclick="changePriority(event,${t.id},'high')"  >High</button>
+        ${!t.completed?`<div class="pri-change" style="margin-top:6px;">
+          <button class="pri-change-btn${pri==='high'?' cur-high':''}"    onclick="changePriority(event,${t.id},'high')"  >High</button>
           <button class="pri-change-btn${pri==='medium'?' cur-medium':''}" onclick="changePriority(event,${t.id},'medium')">Medium</button>
-          <button class="pri-change-btn${pri==='low'?' cur-low':''}"    onclick="changePriority(event,${t.id},'low')"   >Low</button>
-        </div>` : ''}
+          <button class="pri-change-btn${pri==='low'?' cur-low':''}"      onclick="changePriority(event,${t.id},'low')"   >Low</button>
+        </div>`:''}
       </div>
-      <button class="task-delete" onclick="removeTask(${t.id})" title="Delete">✕</button>
-    `;
+      <button class="task-delete" onclick="removeTask(${t.id})" title="Delete">✕</button>`;
     list.appendChild(card);
   });
 }
 
 function renderStats() {
-  const incomplete = tasks.filter(t => !t.completed);
+  const inc = tasks.filter(t => !t.completed);
   document.getElementById('statTotal').textContent   = tasks.length;
   document.getElementById('statDone').textContent    = tasks.filter(t => t.completed).length;
   document.getElementById('statOverdue').textContent = tasks.filter(t => !t.completed && t.due_date < today).length;
-  document.getElementById('priCountHigh').textContent   = incomplete.filter(t => (t.priority||'medium')==='high').length;
-  document.getElementById('priCountMedium').textContent = incomplete.filter(t => (t.priority||'medium')==='medium').length;
-  document.getElementById('priCountLow').textContent    = incomplete.filter(t => (t.priority||'medium')==='low').length;
+  document.getElementById('priCountHigh').textContent   = inc.filter(t => (t.priority||'medium')==='high').length;
+  document.getElementById('priCountMedium').textContent = inc.filter(t => (t.priority||'medium')==='medium').length;
+  document.getElementById('priCountLow').textContent    = inc.filter(t => (t.priority||'medium')==='low').length;
 }
 
-// ── Priority ──────────────────────────────────────────────────────────────────
 function selectPriority(p) {
   selectedPriority = p;
   ['high','medium','low'].forEach(level => {
-    const btn = document.getElementById('pribtn-' + level);
-    btn.className = 'pri-btn' + (level === p ? ' sel-' + level : '');
+    document.getElementById('pribtn-'+level).className = 'pri-btn' + (level===p?' sel-'+level:'');
   });
 }
 
 function setFilter(f) {
   activeFilter = f;
   document.querySelectorAll('.filter-tab').forEach(b => b.className = 'filter-tab');
-  const tab = document.getElementById('ftab-' + f);
-  tab.classList.add(f === 'all' ? 'f-active' : 'f-active-' + f);
+  const tab = document.getElementById('ftab-'+f);
+  tab.classList.add(f==='all' ? 'f-active' : 'f-active-'+f);
   renderTasks();
 }
 
@@ -867,16 +826,15 @@ async function changePriority(e, id, priority) {
   e.stopPropagation();
   const r = await api('PATCH', `/api/tasks/${id}/priority`, { priority });
   if (!r.ok) return;
-  const idx = tasks.findIndex(t => t.id === id);
+  const idx = tasks.findIndex(t => t.id===id);
   if (idx > -1) tasks[idx] = r.data;
   renderAll();
 }
 
-// ── Task actions ──────────────────────────────────────────────────────────────
 async function toggleTask(id) {
   const r = await api('POST', `/api/tasks/${id}/toggle`);
   if (!r.ok) return;
-  const idx = tasks.findIndex(t => t.id === id);
+  const idx = tasks.findIndex(t => t.id===id);
   if (idx > -1) tasks[idx] = r.data;
   renderAll();
 }
@@ -886,13 +844,13 @@ async function addTask() {
   const due   = document.getElementById('newDue').value;
   if (!title || !due) return alert('Please enter a title and due date.');
   document.getElementById('saveBtn').innerHTML = '<span class="spinner"></span>Saving…';
-  const r = await api('POST', '/api/tasks', { title, due_date: due, priority: selectedPriority });
+  const r = await api('POST', '/api/tasks', { title, due_date:due, priority:selectedPriority });
   document.getElementById('saveBtn').textContent = 'Save Task';
   if (!r.ok) return alert(r.data.error || 'Failed to save task.');
   tasks.push(r.data);
   document.getElementById('newTitle').value = '';
   document.getElementById('addTaskForm').classList.remove('visible');
-  selectPriority('medium'); // reset to default
+  selectPriority('medium');
   renderAll();
 }
 
@@ -905,340 +863,282 @@ async function removeTask(id) {
 }
 
 function toggleAddForm() {
-  // Always switch to list view first so the form is visible
   if (currentView !== 'list') switchView('list');
   const form = document.getElementById('addTaskForm');
   form.classList.toggle('visible');
   if (form.classList.contains('visible')) document.getElementById('newTitle').focus();
 }
 
-// ── Breakdown modal ───────────────────────────────────────────────────────────
+// ── Breakdown ─────────────────────────────────────────────────────────────────
 function showBreakdownModal(task) {
   document.getElementById('breakdownDesc').textContent = `You've postponed "${task.title}" ${task.postponement_count} times. Would you like to break it into smaller, more manageable steps?`;
   document.getElementById('breakdownModal').classList.add('visible');
 }
-function closeModal() {
-  document.getElementById('breakdownModal').classList.remove('visible');
-  pendingWarnId = null;
-}
+function closeModal() { document.getElementById('breakdownModal').classList.remove('visible'); pendingWarnId = null; }
 async function breakdownTask() {
   closeModal();
   const sub = prompt('Enter 2–5 subtask titles separated by commas:');
   if (!sub || !pendingWarnId) return;
-  const parent = tasks.find(t => t.id === pendingWarnId);
+  const parent = tasks.find(t => t.id===pendingWarnId);
   const titles = sub.split(',').map(s=>s.trim()).filter(Boolean).slice(0,5);
   for (const title of titles) {
-    const r = await api('POST', '/api/tasks', { title, due_date: parent.due_date, parent_task_id: parent.id, priority: parent.priority });
+    const r = await api('POST', '/api/tasks', { title, due_date:parent.due_date, parent_task_id:parent.id, priority:parent.priority });
     if (r.ok) tasks.push(r.data);
   }
   renderAll();
 }
 
-// ── Admin ─────────────────────────────────────────────────────────────────────
-async function showAdminStats() {
-  const [stats, users] = await Promise.all([api('GET','/api/admin/stats'), api('GET','/api/admin/users')]);
-  if (!stats.ok) return alert('Admin access denied.');
-  const s = stats.data;
-  const userList = users.data.map(u => `• ${u.email}${u.is_admin?' (admin)':''}`).join('\n');
-  alert(`📊 Admin Stats\n\nUsers: ${s.total_users}\nTasks: ${s.total_tasks}\nCompleted: ${s.completed_tasks}\n\n👥 All Users:\n${userList}`);
-}
-
-// ── Helpers ───────────────────────────────────────────────────────────────────
-function fmtDate(ds) {
-  const d = new Date(ds + 'T00:00:00');
-  return d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
-}
-function escHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-
 // ── View switcher ─────────────────────────────────────────────────────────────
-let currentView = 'list';
 function switchView(v) {
   currentView = v;
-  document.getElementById('vtab-list').classList.toggle('active', v === 'list');
-  document.getElementById('vtab-calendar').classList.toggle('active', v === 'calendar');
-  document.getElementById('vtab-ai').classList.toggle('active', v === 'ai');
-  document.getElementById('taskList').style.display       = v === 'list'     ? 'flex'  : 'none';
-  document.getElementById('calendarView').style.display  = v === 'calendar' ? 'block' : 'none';
-  document.getElementById('aiView').style.display        = v === 'ai'       ? 'block' : 'none';
+  ['list','calendar','ai'].forEach(x => document.getElementById('vtab-'+x).classList.toggle('active', x===v));
+  document.getElementById('taskList').style.display      = v==='list'     ? 'flex'  : 'none';
+  document.getElementById('calendarView').style.display = v==='calendar' ? 'block' : 'none';
+  document.getElementById('aiView').style.display       = v==='ai'       ? 'block' : 'none';
   document.getElementById('addTaskForm').classList.remove('visible');
-  document.querySelector('.filter-tabs').style.display   = v === 'list'     ? 'flex'  : 'none';
-  if (v === 'calendar') renderCalendar();
-  if (v === 'ai')       renderAiStats();
+  document.querySelector('.filter-tabs').style.display  = v==='list'     ? 'flex'  : 'none';
+  if (v==='calendar') renderCalendar();
+  if (v==='ai')       renderAiStats();
 }
 
 // ── Calendar ──────────────────────────────────────────────────────────────────
-let calYear  = new Date().getFullYear();
-let calMonth = new Date().getMonth(); // 0-indexed
-let selectedDay = null;
-
-function calPrev() {
-  calMonth--;
-  if (calMonth < 0) { calMonth = 11; calYear--; }
-  selectedDay = null;
-  renderCalendar();
-}
-function calNext() {
-  calMonth++;
-  if (calMonth > 11) { calMonth = 0; calYear++; }
-  selectedDay = null;
-  renderCalendar();
-}
+function calPrev() { calMonth--; if (calMonth<0){calMonth=11;calYear--;} selectedDay=null; renderCalendar(); }
+function calNext() { calMonth++; if (calMonth>11){calMonth=0;calYear++;} selectedDay=null; renderCalendar(); }
 
 function renderCalendar() {
-  const months = ['January','February','March','April','May','June',
-                  'July','August','September','October','November','December'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
   document.getElementById('calMonthLabel').textContent = `${months[calMonth]} ${calYear}`;
-
   const grid = document.getElementById('calGrid');
   grid.innerHTML = '';
-
-  // Day headers
   ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
-    const h = document.createElement('div');
-    h.className = 'cal-day-header';
-    h.textContent = d;
-    grid.appendChild(h);
+    const h = document.createElement('div'); h.className='cal-day-header'; h.textContent=d; grid.appendChild(h);
   });
-
-  // Build task map: date string → array of tasks
   const taskMap = {};
-  tasks.forEach(t => {
-    if (!taskMap[t.due_date]) taskMap[t.due_date] = [];
-    taskMap[t.due_date].push(t);
-  });
-
-  const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=Sun
-  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
-  const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
-  const todayStr = today;
-
-  // Fill grid: prev month padding + current + next padding
-  const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
-
-  for (let i = 0; i < totalCells; i++) {
-    let day, monthOffset = 0;
-    if (i < firstDay) {
-      day = daysInPrev - firstDay + 1 + i;
-      monthOffset = -1;
-    } else if (i >= firstDay + daysInMonth) {
-      day = i - firstDay - daysInMonth + 1;
-      monthOffset = 1;
-    } else {
-      day = i - firstDay + 1;
-    }
-
-    const cellDate = new Date(calYear, calMonth + monthOffset, day);
+  tasks.forEach(t => { if (!taskMap[t.due_date]) taskMap[t.due_date]=[]; taskMap[t.due_date].push(t); });
+  const firstDay = new Date(calYear,calMonth,1).getDay();
+  const daysInMonth = new Date(calYear,calMonth+1,0).getDate();
+  const daysInPrev  = new Date(calYear,calMonth,0).getDate();
+  const totalCells = Math.ceil((firstDay+daysInMonth)/7)*7;
+  for (let i=0; i<totalCells; i++) {
+    let day, monthOffset=0;
+    if (i<firstDay) { day=daysInPrev-firstDay+1+i; monthOffset=-1; }
+    else if (i>=firstDay+daysInMonth) { day=i-firstDay-daysInMonth+1; monthOffset=1; }
+    else day=i-firstDay+1;
+    const cellDate = new Date(calYear,calMonth+monthOffset,day);
     const ds = cellDate.toISOString().split('T')[0];
-    const isToday     = ds === todayStr;
-    const isOther     = monthOffset !== 0;
-    const isSelected  = ds === selectedDay;
-    const dayTasks    = taskMap[ds] || [];
-
-    const cell = document.createElement('div');
-    cell.className = 'cal-cell' +
-      (isOther    ? ' other-month' : '') +
-      (isToday    ? ' today'       : '') +
-      (isSelected ? ' selected'    : '');
-    cell.onclick = () => selectDay(ds);
-
-    // Date number
-    const dateEl = document.createElement('div');
-    dateEl.className = 'cal-date';
-    dateEl.textContent = day;
-    cell.appendChild(dateEl);
-
-    // Task dots (max 3 visible)
-    const visible = dayTasks.slice(0, 3);
-    visible.forEach(t => {
-      const dot = document.createElement('div');
-      dot.className = `cal-task-dot pri-${t.priority||'medium'}${t.completed?' done':''}`;
-      dot.textContent = t.title;
-      cell.appendChild(dot);
+    const isToday=ds===today, isOther=monthOffset!==0, isSelected=ds===selectedDay;
+    const dayTasks=taskMap[ds]||[];
+    const cell=document.createElement('div');
+    cell.className='cal-cell'+(isOther?' other-month':'')+(isToday?' today':'')+(isSelected?' selected':'');
+    cell.onclick=()=>selectDay(ds);
+    const dateEl=document.createElement('div'); dateEl.className='cal-date'; dateEl.textContent=day; cell.appendChild(dateEl);
+    dayTasks.slice(0,3).forEach(t => {
+      const dot=document.createElement('div');
+      dot.className=`cal-task-dot pri-${t.priority||'medium'}${t.completed?' done':''}`;
+      dot.textContent=t.title; cell.appendChild(dot);
     });
-    if (dayTasks.length > 3) {
-      const more = document.createElement('div');
-      more.className = 'cal-more';
-      more.textContent = `+${dayTasks.length - 3} more`;
-      cell.appendChild(more);
-    }
-
+    if (dayTasks.length>3) { const m=document.createElement('div'); m.className='cal-more'; m.textContent=`+${dayTasks.length-3} more`; cell.appendChild(m); }
     grid.appendChild(cell);
   }
-
-  // Re-render day detail if a day is selected
   if (selectedDay) renderDayDetail(selectedDay);
 }
 
 function selectDay(ds) {
-  selectedDay = (selectedDay === ds) ? null : ds;
+  selectedDay=(selectedDay===ds)?null:ds;
   renderCalendar();
   if (selectedDay) renderDayDetail(selectedDay);
-  else document.getElementById('dayDetail').style.display = 'none';
+  else document.getElementById('dayDetail').style.display='none';
 }
 
 function renderDayDetail(ds) {
-  const panel = document.getElementById('dayDetail');
-  const dayTasks = tasks.filter(t => t.due_date === ds);
-  const d = new Date(ds + 'T00:00:00');
-  const label = d.toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric' });
-
+  const panel=document.getElementById('dayDetail');
+  const dayTasks=tasks.filter(t=>t.due_date===ds);
+  const d=new Date(ds+'T00:00:00');
+  const label=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
   if (!dayTasks.length) {
-    panel.style.display = 'block';
-    panel.innerHTML = `
-      <div class="day-detail">
-        <div class="day-detail-header">
-          <div class="day-detail-title">${label}</div>
-          <button class="day-detail-close" onclick="selectDay('${ds}')">×</button>
-        </div>
-        <div class="day-empty">No tasks due on this day.<br>
-          <button style="margin-top:10px;padding:7px 16px;border-radius:10px;border:none;background:var(--amber);color:white;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;" onclick="quickAddOnDay('${ds}')">+ Add task for this day</button>
-        </div>
-      </div>`;
+    panel.style.display='block';
+    panel.innerHTML=`<div class="day-detail"><div class="day-detail-header"><div class="day-detail-title">${label}</div><button class="day-detail-close" onclick="selectDay('${ds}')">×</button></div><div class="day-empty">No tasks due on this day.<br><button style="margin-top:10px;padding:7px 16px;border-radius:10px;border:none;background:var(--amber);color:white;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;" onclick="quickAddOnDay('${ds}')">+ Add task for this day</button></div></div>`;
     return;
   }
-
-  const priLabels = { high:'🔴 High', medium:'🟡 Medium', low:'🟢 Low' };
-  const rows = dayTasks.map(t => `
-    <div class="day-task-row">
-      <div class="day-task-check${t.completed?' done':''}" onclick="toggleTask(${t.id});renderCalendar()"></div>
-      <div class="day-task-text${t.completed?' done':''}">${escHtml(t.title)}</div>
-      <span class="pri-badge pri-badge-${t.priority||'medium'}" style="flex-shrink:0">${priLabels[t.priority||'medium']}</span>
-    </div>`).join('');
-
-  panel.style.display = 'block';
-  panel.innerHTML = `
-    <div class="day-detail">
-      <div class="day-detail-header">
-        <div class="day-detail-title">${label} · ${dayTasks.length} task${dayTasks.length!==1?'s':''}</div>
-        <button class="day-detail-close" onclick="selectDay('${ds}')">×</button>
-      </div>
-      ${rows}
-      <div style="margin-top:12px;">
-        <button style="padding:7px 16px;border-radius:10px;border:none;background:var(--amber);color:white;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;" onclick="quickAddOnDay('${ds}')">+ Add task for this day</button>
-      </div>
-    </div>`;
+  const priLabels={high:'🔴 High',medium:'🟡 Medium',low:'🟢 Low'};
+  const rows=dayTasks.map(t=>`<div class="day-task-row"><div class="day-task-check${t.completed?' done':''}" onclick="toggleTask(${t.id});renderCalendar()"></div><div class="day-task-text${t.completed?' done':''}">${escHtml(t.title)}</div><span class="pri-badge pri-badge-${t.priority||'medium'}" style="flex-shrink:0">${priLabels[t.priority||'medium']}</span></div>`).join('');
+  panel.style.display='block';
+  panel.innerHTML=`<div class="day-detail"><div class="day-detail-header"><div class="day-detail-title">${label} · ${dayTasks.length} task${dayTasks.length!==1?'s':''}</div><button class="day-detail-close" onclick="selectDay('${ds}')">×</button></div>${rows}<div style="margin-top:12px;"><button style="padding:7px 16px;border-radius:10px;border:none;background:var(--amber);color:white;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;" onclick="quickAddOnDay('${ds}')">+ Add task for this day</button></div></div>`;
 }
 
 function quickAddOnDay(ds) {
-  // Switch to list view, open the form, pre-fill due date
   switchView('list');
   document.getElementById('addTaskForm').classList.add('visible');
-  document.getElementById('newDue').value = ds;
+  document.getElementById('newDue').value=ds;
   document.getElementById('newTitle').focus();
 }
 
-
-// ── Page switcher (Dashboard vs AI) ──────────────────────────────────────────
-let currentPage = 'dashboard';
-
+// ── Page switcher ─────────────────────────────────────────────────────────────
 function switchPage(page) {
-  currentPage = page;
-  const appLayout = document.querySelector('.app-layout');
-  const aiPage    = document.getElementById('aiPage');
-  const aiBtn     = document.getElementById('aiNavBtn');
-
-  if (page === 'ai') {
-    appLayout.style.display = 'none';
-    aiPage.classList.add('visible');
-    aiBtn.classList.add('nav-btn-primary');
-    aiBtn.classList.remove('nav-btn-ghost');
+  currentPage=page;
+  const appLayout=document.querySelector('.app-layout');
+  const aiPage=document.getElementById('aiPage');
+  const aiBtn=document.getElementById('aiNavBtn');
+  if (page==='ai') {
+    appLayout.style.display='none'; aiPage.classList.add('visible');
+    aiBtn.classList.add('nav-btn-primary'); aiBtn.classList.remove('nav-btn-ghost');
     refreshApiKeyUI();
   } else {
-    appLayout.style.display = 'grid';
-    aiPage.classList.remove('visible');
-    aiBtn.classList.remove('nav-btn-primary');
-    aiBtn.classList.add('nav-btn-ghost');
+    appLayout.style.display='grid'; aiPage.classList.remove('visible');
+    aiBtn.classList.remove('nav-btn-primary'); aiBtn.classList.add('nav-btn-ghost');
   }
 }
 
-// ── OpenAI API key ────────────────────────────────────────────────────────────
+// ── Admin Panel ───────────────────────────────────────────────────────────────
+function showAdminPage(show) {
+  const adminPage=document.getElementById('adminPage');
+  const appLayout=document.querySelector('.app-layout');
+  const adminLink=document.getElementById('adminLink');
+  if (show) {
+    appLayout.style.display='none'; adminPage.classList.add('visible');
+    adminLink.classList.add('nav-btn-primary'); adminLink.classList.remove('nav-btn-ghost');
+    loadAdminDashboard();
+  } else {
+    appLayout.style.display='grid'; adminPage.classList.remove('visible');
+    adminLink.classList.remove('nav-btn-primary'); adminLink.classList.add('nav-btn-ghost');
+  }
+}
+
+async function loadAdminDashboard() {
+  const content=document.getElementById('adminContent');
+  content.innerHTML='<div class="admin-loading">⏳ Loading admin data…</div>';
+  const r=await api('GET','/api/admin/dashboard');
+  if (!r.ok) { content.innerHTML='<div class="admin-loading" style="color:var(--red)">⚠️ Admin access denied or server error.</div>'; return; }
+  const {stats,users}=r.data;
+  const now=new Date();
+  const completeRate=stats.total_tasks>0?Math.round(stats.completed_tasks/stats.total_tasks*100):0;
+  const statCards=[
+    {num:stats.total_users,        label:'Total Users',        sub:'registered accounts',cls:''},
+    {num:stats.total_tasks,        label:'Total Tasks',        sub:'across all users',   cls:''},
+    {num:stats.completed_tasks,    label:'Completed Tasks',    sub:completeRate+'% rate',cls:'good'},
+    {num:stats.pending_tasks,      label:'Pending Tasks',      sub:'not yet completed',  cls:''},
+    {num:stats.overdue_tasks,      label:'Overdue Tasks',      sub:'past due date',      cls:stats.overdue_tasks>0?'danger':'good'},
+    {num:stats.at_risk_tasks,      label:'At-Risk Tasks',      sub:'postponed 3+ times', cls:stats.at_risk_tasks>0?'warn':'good'},
+    {num:stats.avg_tasks_per_user, label:'Avg Tasks / User',   sub:'mean task load',     cls:''},
+    {num:(stats.avg_completion_rate||0)+'%',label:'Avg Completion',sub:'per user avg',   cls:''},
+    {num:stats.high_priority_tasks,label:'High Priority',      sub:'across all users',   cls:stats.high_priority_tasks>5?'warn':''},
+  ];
+  const statsHtml=`
+    <div class="admin-section-title">📊 System Overview <span class="admin-section-badge">Live</span>
+      <span style="margin-left:auto;font-size:11px;color:var(--brown-light);font-family:'DM Sans',sans-serif;">Updated: ${now.toLocaleTimeString()}</span>
+    </div>
+    <div class="admin-stats-grid">${statCards.map(c=>`<div class="admin-stat-card ${c.cls}"><div class="admin-stat-num">${c.num??'—'}</div><div class="admin-stat-label">${c.label}</div><div class="admin-stat-sub">${c.sub}</div></div>`).join('')}</div>`;
+  const userRows=users.map(u=>{
+    const rate=u.completion_rate||0;
+    const barColor=rate>=70?'var(--green)':rate>=40?'var(--amber)':'var(--red)';
+    const risk=u.at_risk_tasks>=3?['risk-high','🔴 High Risk']:u.at_risk_tasks>=1?['risk-medium','🟡 Medium']:u.overdue_tasks>=1?['risk-medium','🟡 Overdue']:['risk-none','🟢 OK'];
+    const joined=new Date(u.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+    const lastAct=u.last_active?new Date(u.last_active).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'Never';
+    const isAdmin=u.is_admin?'<span class="admin-badge">admin</span>':'';
+    const isSelf=u.id===currentUser?.id;
+    return `<tr>
+      <td><div class="user-email">${escHtml(u.email)} ${isAdmin}</div></td>
+      <td class="muted">${joined}</td>
+      <td style="text-align:center;">${u.total_tasks}</td>
+      <td style="text-align:center;color:var(--green);font-weight:600;">${u.completed_tasks}</td>
+      <td style="text-align:center;color:${u.pending_tasks>0?'var(--amber)':'var(--brown-light)'};">${u.pending_tasks}</td>
+      <td style="text-align:center;color:${u.overdue_tasks>0?'var(--red)':'var(--brown-light)'};">${u.overdue_tasks}</td>
+      <td><div class="rate-bar-wrap"><div class="rate-bar-bg"><div class="rate-bar-fill" style="width:${rate}%;background:${barColor};"></div></div><span class="rate-label">${rate}%</span></div></td>
+      <td><span class="risk-chip ${risk[0]}">${risk[1]}</span></td>
+      <td class="muted">${lastAct}</td>
+      <td>${isSelf?'<span style="font-size:11px;color:var(--brown-light);">You</span>':`<button class="admin-del-btn" onclick="adminDeleteUser(${u.id},'${escHtml(u.email)}')">Delete</button>`}</td>
+    </tr>`;
+  }).join('');
+  const usersHtml=`
+    <div class="admin-section-title">👥 User Accounts <span class="admin-section-badge">${users.length} user${users.length!==1?'s':''}</span></div>
+    <div class="admin-table-wrap"><table class="admin-table">
+      <thead><tr>
+        <th>Email</th><th>Joined</th><th style="text-align:center;">Total</th><th style="text-align:center;">Done</th>
+        <th style="text-align:center;">Pending</th><th style="text-align:center;">Overdue</th>
+        <th>Completion</th><th>Burnout Risk</th><th>Last Active</th><th>Actions</th>
+      </tr></thead>
+      <tbody>${userRows||'<tr><td colspan="10" style="text-align:center;color:var(--brown-light);padding:24px;">No users yet.</td></tr>'}</tbody>
+    </table></div>`;
+  content.innerHTML=statsHtml+usersHtml;
+}
+
+async function adminDeleteUser(id,email) {
+  if (!confirm('Delete user '+email+'?\nThis will permanently delete all their tasks too.')) return;
+  const r=await api('DELETE','/api/admin/users/'+id);
+  if (!r.ok) return alert(r.data.error||'Failed to delete user.');
+  loadAdminDashboard();
+}
+
+// ── OpenAI key ────────────────────────────────────────────────────────────────
 function saveApiKey() {
-  const key = document.getElementById('apiKeyInput').value.trim();
+  const key=document.getElementById('apiKeyInput').value.trim();
   if (!key.startsWith('sk-')) return alert('Please enter a valid OpenAI key (starts with sk-)');
-  localStorage.setItem('openai_key', key);
-  refreshApiKeyUI();
+  localStorage.setItem('openai_key',key); refreshApiKeyUI();
 }
-
-function getApiKey() {
-  return localStorage.getItem('openai_key') || '';
-}
-
-function clearApiKey() {
-  localStorage.removeItem('openai_key');
-  refreshApiKeyUI();
-}
-
+function getApiKey() { return localStorage.getItem('openai_key')||''; }
+function clearApiKey() { localStorage.removeItem('openai_key'); refreshApiKeyUI(); }
 function refreshApiKeyUI() {
-  const key    = getApiKey();
-  const banner = document.getElementById('apiKeyBanner');
-  const btns   = document.querySelectorAll('.ai-run-btn, #runAllBtn');
-
+  const key=getApiKey();
+  const banner=document.getElementById('apiKeyBanner');
+  const btns=document.querySelectorAll('.ai-run-btn, #runAllBtn');
   if (key) {
     banner.classList.add('connected');
-    banner.innerHTML = `
-      <div class="api-key-icon">✅</div>
-      <div class="api-key-body">
-        <div class="api-key-title">OpenAI Connected</div>
-        <div class="api-key-sub">Key ending in ...${key.slice(-4)} is active. Your key stays in your browser only.</div>
-      </div>
-      <button class="api-key-clear" onclick="clearApiKey()">Disconnect</button>`;
-    btns.forEach(b => b.disabled = false);
+    banner.innerHTML=`<div class="api-key-icon">✅</div><div class="api-key-body"><div class="api-key-title">OpenAI Connected</div><div class="api-key-sub">Key ending in ...${key.slice(-4)} is active.</div></div><button class="api-key-clear" onclick="clearApiKey()">Disconnect</button>`;
+    btns.forEach(b=>b.disabled=false);
   } else {
     banner.classList.remove('connected');
-    banner.innerHTML = `
-      <div class="api-key-icon">🔑</div>
-      <div class="api-key-body">
-        <div class="api-key-title">Connect your OpenAI key</div>
-        <div class="api-key-sub">Your key is stored only in your browser — never sent to our server.</div>
-        <div class="api-key-input-row">
-          <input class="api-key-input" type="password" id="apiKeyInput" placeholder="sk-...">
-          <button class="api-key-save" onclick="saveApiKey()">Connect</button>
-        </div>
-      </div>`;
-    btns.forEach(b => b.disabled = true);
+    banner.innerHTML=`<div class="api-key-icon">🔑</div><div class="api-key-body"><div class="api-key-title">Connect your OpenAI key</div><div class="api-key-sub">Your key is stored only in your browser — never sent to our server.</div><div class="api-key-input-row"><input class="api-key-input" type="password" id="apiKeyInput" placeholder="sk-..."><button class="api-key-save" onclick="saveApiKey()">Connect</button></div></div>`;
+    btns.forEach(b=>b.disabled=true);
   }
 }
 
-// ── Build task context for AI ─────────────────────────────────────────────────
+// ── Task context ──────────────────────────────────────────────────────────────
 function buildTaskContext() {
-  const todayD  = new Date();
-  const todayStr = today;
-  const incomplete = tasks.filter(t => !t.completed);
-  const completed  = tasks.filter(t => t.completed);
-  const overdue    = incomplete.filter(t => t.due_date < todayStr);
-  const postponed  = incomplete.filter(t => t.postponement_count >= 3);
-
-  const taskLines = incomplete.map(t => {
-    const daysUntil = Math.ceil((new Date(t.due_date) - todayD) / 86400000);
-    const rel = daysUntil < 0 ? `${Math.abs(daysUntil)} days OVERDUE` : daysUntil === 0 ? 'due TODAY' : `due in ${daysUntil} days`;
+  const todayD=new Date();
+  const incomplete=tasks.filter(t=>!t.completed);
+  const completed=tasks.filter(t=>t.completed);
+  const overdue=incomplete.filter(t=>t.due_date<today);
+  const postponed=incomplete.filter(t=>t.postponement_count>=3);
+  const taskLines=incomplete.map(t=>{
+    const daysUntil=Math.ceil((new Date(t.due_date)-todayD)/86400000);
+    const rel=daysUntil<0?`${Math.abs(daysUntil)} days OVERDUE`:daysUntil===0?'due TODAY':`due in ${daysUntil} days`;
     return `- "${t.title}" | priority: ${t.priority||'medium'} | ${rel} | postponed ${t.postponement_count}x`;
   }).join('\n');
-
-  return `
-Today's date: ${todayStr}
+  return `Today's date: ${today}
 Total tasks: ${tasks.length} (${incomplete.length} incomplete, ${completed.length} completed)
 Overdue tasks: ${overdue.length}
-Heavily postponed tasks (3+ times): ${postponed.length}
-Completion streak: ${document.getElementById('streakNum').textContent} days
+Heavily postponed (3+ times): ${postponed.length}
+Streak: ${document.getElementById('streakNum').textContent} days
 
 INCOMPLETE TASKS:
-${taskLines || 'No incomplete tasks.'}
+${taskLines||'No incomplete tasks.'}
 
 COMPLETED THIS WEEK:
-${completed.filter(t => {
-    if (!t.completed_at) return false;
-    const d = new Date(t.completed_at);
-    const diff = (todayD - d) / 86400000;
-    return diff <= 7;
-  }).map(t => `- "${t.title}"`).join('\n') || 'None yet.'}
-`.trim();
+${completed.filter(t=>{if(!t.completed_at)return false;return(todayD-new Date(t.completed_at))/86400000<=7;}).map(t=>`- "${t.title}"`).join('\n')||'None yet.'}`.trim();
 }
 
-// ── Prompts ───────────────────────────────────────────────────────────────────
+// ── AI Prompts ────────────────────────────────────────────────────────────────
 const AI_PROMPTS = {
+  full: (ctx) => `You are an academic coach. Give a fast, concise analysis. Keep each section SHORT — 2-3 sentences max.
+
+${ctx}
+
+Respond with exactly these 4 sections:
+
+### 🔥 Burnout Risk
+Score 1-10 and explain why in 2 sentences. Give 1 tip.
+
+### ⚠️ Task Overload
+Is their workload manageable? Name any urgent tasks.
+
+### 🏆 Top 3 Priorities This Week
+The 3 most important tasks right now, each with one reason.
+
+### 📋 Weekly Recap
+One sentence on progress, one sentence on what needs urgent attention.
+
+Be direct. Use actual task names. Keep total response under 200 words.`,
+
   burnout: (ctx) => `You are an academic wellness coach. Analyze this student's task data and provide a Burnout Risk assessment.
 
 ${ctx}
@@ -1248,7 +1148,7 @@ Respond with:
 2. Then a brief assessment (3-4 sentences) explaining the score
 3. Then 3 specific, actionable steps to reduce burnout risk
 
-Be direct, empathetic, and practical. Use a warm, supportive tone.`,
+Be direct, empathetic, and practical.`,
 
   overload: (ctx) => `You are an academic schedule optimizer. Analyze this student's task data and identify task overload issues.
 
@@ -1259,7 +1159,7 @@ Identify:
 2. Which tasks are at highest risk of being missed
 3. Concrete recommendations to redistribute or reschedule work
 
-Format your response with clear sections. Be specific — mention actual task names and dates.`,
+Be specific — mention actual task names and dates.`,
 
   weekly: (ctx) => `You are a personal academic coach. Generate a Weekly Priorities Recap for this student.
 
@@ -1267,16 +1167,9 @@ ${ctx}
 
 Structure your response as:
 ### This Week's Wins
-(celebrate completed tasks)
-
 ### Top 3 Focus Areas for Next Week
-(most important incomplete tasks with reasoning)
-
 ### Watch Out For
-(overdue or heavily postponed items needing urgent attention)
-
 ### Quick Tip
-(one personalized productivity tip based on their patterns)
 
 Be encouraging, specific, and motivating.`,
 
@@ -1284,281 +1177,180 @@ Be encouraging, specific, and motivating.`,
 
 ${ctx}
 
-Create a day-by-day plan for the next 7 days. For each day:
-- Suggest which specific tasks to work on (use actual task names)
-- Recommend how long to spend on each
-- Include brief study technique tips where relevant
+Create a day-by-day plan for the next 7 days using actual task names.
+Prioritize high-priority and overdue tasks first. Include buffer time.`,
 
-Prioritize high-priority and overdue tasks first. Include buffer time. Format clearly with each day on a new section.`,
-
-  gpa: (ctx) => `You are an elite academic performance coach specializing in GPA maximization. Analyze this student's full task portfolio and create a comprehensive GPA Maximizer Plan.
+  gpa: (ctx) => `You are an elite academic performance coach. Create a GPA Maximizer Plan for this student.
 
 ${ctx}
 
-Your plan must include:
-
+Include:
 ### GPA Impact Assessment
-Classify each incomplete task as HIGH/MEDIUM/LOW GPA impact and explain why.
-
 ### The 20/80 Rule
-Identify the top 20% of tasks that will drive 80% of academic results. Tell them exactly which tasks to prioritize.
-
 ### What to Drop, Delegate, or Defer
-Identify any tasks that can be dropped, minimized, or pushed without significantly hurting GPA.
-
 ### 30-Day Academic Roadmap
-A week-by-week breakdown of what to focus on over the next 4 weeks for maximum GPA outcome.
-
 ### Mindset & Strategy
-2-3 high-leverage study strategies personalized to their current patterns (based on postponement habits, overdue items, etc.)
 
-Be detailed, specific, and actionable. This should feel like advice from a $500/hour academic consultant.`
+Be detailed, specific, and actionable.`
 };
 
-// ── Stream from OpenAI ────────────────────────────────────────────────────────
+// ── OpenAI streaming ──────────────────────────────────────────────────────────
 async function streamOpenAI(prompt, onChunk, onDone) {
-  const key = getApiKey();
-  const res = await fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
-    body: JSON.stringify({
-      model: 'gpt-4o',
-      stream: true,
-      max_tokens: 1200,
-      messages: [{ role: 'user', content: prompt }]
-    })
+  const key=getApiKey();
+  const res=await fetch('https://api.openai.com/v1/chat/completions', {
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},
+    body:JSON.stringify({ model:'gpt-4o-mini', stream:true, max_tokens:1500, messages:[{role:'user',content:prompt}] })
   });
-
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.error?.message || `OpenAI error ${res.status}`);
-  }
-
-  const reader = res.body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = '';
-
+  if (!res.ok) { const err=await res.json().catch(()=>({})); throw new Error(err.error?.message||`OpenAI error ${res.status}`); }
+  const reader=res.body.getReader();
+  const decoder=new TextDecoder();
+  let buffer='';
   while (true) {
-    const { value, done } = await reader.read();
+    const {value,done}=await reader.read();
     if (done) break;
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split('\n');
-    buffer = lines.pop();
+    buffer+=decoder.decode(value,{stream:true});
+    const lines=buffer.split('\n'); buffer=lines.pop();
     for (const line of lines) {
       if (!line.startsWith('data: ')) continue;
-      const data = line.slice(6).trim();
-      if (data === '[DONE]') { onDone(); return; }
-      try {
-        const json  = JSON.parse(data);
-        const chunk = json.choices?.[0]?.delta?.content || '';
-        if (chunk) onChunk(chunk);
-      } catch {}
+      const data=line.slice(6).trim();
+      if (data==='[DONE]') { onDone(); return; }
+      try { const json=JSON.parse(data); const chunk=json.choices?.[0]?.delta?.content||''; if (chunk) onChunk(chunk); } catch {}
     }
   }
   onDone();
 }
 
-// ── Run a single analysis ─────────────────────────────────────────────────────
-async function runAnalysis(type) {
-  const btn     = document.getElementById('btn-' + type);
-  const result  = document.getElementById('result-' + type);
-  const textEl  = document.getElementById('text-' + type);
-
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>Analyzing…';
-  result.classList.add('visible');
-  textEl.innerHTML = '<span class="ai-cursor"></span>';
-
-  const ctx    = buildTaskContext();
-  const prompt = AI_PROMPTS[type](ctx);
-  let   full   = '';
-
-  try {
-    await streamOpenAI(prompt,
-      (chunk) => {
-        full += chunk;
-        textEl.innerHTML = renderMarkdown(full) + '<span class="ai-cursor"></span>';
-        textEl.scrollTop = textEl.scrollHeight;
-
-        // Extract burnout score
-        if (type === 'burnout') {
-          const m = full.match(/SCORE:\s*(\d+)/);
-          if (m) {
-            const score = Math.min(100, parseInt(m[1]));
-            document.getElementById('score-burnout').style.display = 'block';
-            document.getElementById('burnout-bar').style.width = score + '%';
-            document.getElementById('burnout-score-label').textContent = score + '%';
-            document.getElementById('burnout-bar').style.background =
-              score >= 70 ? '#B91C1C' : score >= 40 ? '#D97706' : '#059669';
-          }
-        }
-      },
-      () => {
-        textEl.innerHTML = renderMarkdown(full);
-        btn.disabled = false;
-        btn.innerHTML = '↻ Regenerate';
-      }
-    );
-  } catch(err) {
-    textEl.innerHTML = `<span style="color:var(--red)">⚠️ Error: ${escHtml(err.message)}</span>`;
-    btn.disabled = false;
-    btn.innerHTML = 'Try Again';
-  }
-}
-
-// ── Run all analyses sequentially ─────────────────────────────────────────────
-async function runAllAnalyses() {
-  for (const type of ['burnout', 'overload', 'weekly', 'schedule', 'gpa']) {
-    await runAnalysis(type);
-  }
-}
-
-// ── Simple markdown renderer ──────────────────────────────────────────────────
-function renderMarkdown(text) {
-  return text
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-    .replace(/^## (.+)$/gm,  '<h3>$1</h3>')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^- (.+)$/gm, '<li>$1</li>')
-    .replace(/(<li>.*<\/li>\n?)+/g, s => '<ul>' + s + '</ul>')
-    .replace(/\n\n/g, '<br><br>')
-    .replace(/\n/g, '<br>');
-}
-
-
-
-// ── AI Coach ──────────────────────────────────────────────────────────────────
-let aiMode = 'full';
-
+// ── AI Coach tab ──────────────────────────────────────────────────────────────
 function selectAiMode(mode) {
-  aiMode = mode;
-  document.querySelectorAll('.ai-mode-btn').forEach(b => {
-    b.classList.toggle('selected', b.dataset.mode === mode);
-  });
+  aiMode=mode;
+  document.querySelectorAll('.ai-mode-btn').forEach(b=>b.classList.toggle('selected',b.dataset.mode===mode));
 }
 
 function renderAiStats() {
-  const today_str = today;
-  const incomplete = tasks.filter(t => !t.completed);
-  const overdue    = incomplete.filter(t => t.due_date < today_str);
-  const highPri    = incomplete.filter(t => t.priority === 'high');
-  const postponed  = tasks.filter(t => t.postponement_count >= 3 && !t.completed);
-
-  const chips = [
-    { num: incomplete.length, label: 'Pending',  cls: incomplete.length > 8 ? 'warn' : '' },
-    { num: overdue.length,    label: 'Overdue',   cls: overdue.length > 0 ? 'danger' : 'good' },
-    { num: highPri.length,    label: 'High Pri',  cls: highPri.length > 3 ? 'warn' : '' },
-    { num: postponed.length,  label: 'Postponed', cls: postponed.length > 0 ? 'warn' : 'good' },
+  const inc=tasks.filter(t=>!t.completed);
+  const overdue=inc.filter(t=>t.due_date<today);
+  const highPri=inc.filter(t=>t.priority==='high');
+  const postponed=tasks.filter(t=>t.postponement_count>=3&&!t.completed);
+  const chips=[
+    {num:inc.length,     label:'Pending',  cls:inc.length>8?'warn':''},
+    {num:overdue.length, label:'Overdue',  cls:overdue.length>0?'danger':'good'},
+    {num:highPri.length, label:'High Pri', cls:highPri.length>3?'warn':''},
+    {num:postponed.length,label:'Postponed',cls:postponed.length>0?'warn':'good'},
   ];
-  document.getElementById('aiStatsRow').innerHTML = chips.map(c => `
-    <div class="ai-stat-chip ${c.cls}">
-      <div class="ai-stat-num">${c.num}</div>
-      <div class="ai-stat-label">${c.label}</div>
-    </div>`).join('');
-
-  // Show key connection status in the AI tab hero
-  const keyStatusEl = document.getElementById('aiKeyStatus');
+  document.getElementById('aiStatsRow').innerHTML=chips.map(c=>`<div class="ai-stat-chip ${c.cls}"><div class="ai-stat-num">${c.num}</div><div class="ai-stat-label">${c.label}</div></div>`).join('');
+  const keyStatusEl=document.getElementById('aiKeyStatus');
   if (keyStatusEl) {
-    const k = getApiKey();
-    keyStatusEl.innerHTML = k
-      ? '✅ OpenAI connected — ready to generate'
-      : '🔑 No OpenAI key — click <strong>🤖 AI Advisor</strong> in the nav to connect one';
+    const k=getApiKey();
+    keyStatusEl.innerHTML=k?'✅ OpenAI connected — ready to generate':'🔑 No OpenAI key — click <strong>🤖 AI Advisor</strong> in the nav to connect one';
   }
 }
 
 async function runAiFeedback() {
-  const btn = document.getElementById('aiRunBtn');
-  const resultDiv = document.getElementById('aiResult');
-
-  // Need an OpenAI key — check localStorage first
-  const key = getApiKey();
+  const btn=document.getElementById('aiRunBtn');
+  const resultDiv=document.getElementById('aiResult');
+  const key=getApiKey();
   if (!key) {
-    resultDiv.style.display = 'block';
-    resultDiv.innerHTML = `<div class="ai-result-card" style="border-color:var(--red-pale);">
-      <div style="color:var(--red);font-weight:600;">🔑 OpenAI Key Required</div>
-      <div style="margin-top:8px;font-size:14px;color:var(--brown-mid);">
-        Click <strong>🤖 AI Advisor</strong> in the nav bar, paste your OpenAI key there, then come back here.
-      </div>
-    </div>`;
+    resultDiv.style.display='block';
+    resultDiv.innerHTML=`<div class="ai-result-card" style="border-color:var(--red-pale);"><div style="color:var(--red);font-weight:600;">🔑 OpenAI Key Required</div><div style="margin-top:8px;font-size:14px;color:var(--brown-mid);">Click <strong>🤖 AI Advisor</strong> in the nav bar to connect your key.</div></div>`;
     return;
   }
-
-  btn.disabled = true;
-  btn.innerHTML = '<div class="ai-spinner"></div> Analyzing your tasks…';
-  resultDiv.style.display = 'none';
-
-  const modeLabels = {
-    full:     '🎯 Full Analysis',
-    gpa:      '🏆 GPA Maximizer Plan',
-    schedule: '📆 Optimal Study Schedule',
-    burnout:  '🔥 Burnout Risk Assessment',
-    weekly:   '📋 Weekly Priorities Recap',
-  };
-
-  // Build the prompt using the same context builder as the AI Advisor page
-  const ctx = buildTaskContext();
-  const prompt = AI_PROMPTS[aiMode] ? AI_PROMPTS[aiMode](ctx) : AI_PROMPTS['full'](ctx);
-
-  // Show result card immediately so user sees streaming output
-  resultDiv.style.display = 'block';
-  resultDiv.innerHTML = `
-    <div class="ai-result-card">
-      <div class="ai-result-header">
-        <div class="ai-result-title">${modeLabels[aiMode] || 'AI Feedback'}</div>
-        <button class="ai-result-copy" onclick="copyAiFeedback()">Copy</button>
-      </div>
-      <div class="ai-result-body" id="aiResultBody"><span class="ai-cursor"></span></div>
-    </div>`;
-
-  const bodyEl = document.getElementById('aiResultBody');
-  let full = '';
-
+  btn.disabled=true;
+  btn.innerHTML='<div class="ai-spinner"></div> Analyzing your tasks…';
+  resultDiv.style.display='none';
+  const modeLabels={full:'🎯 Full Analysis',gpa:'🏆 GPA Maximizer Plan',schedule:'📆 Optimal Study Schedule',burnout:'🔥 Burnout Risk Assessment',weekly:'📋 Weekly Priorities Recap'};
+  const ctx=buildTaskContext();
+  const promptFn=AI_PROMPTS[aiMode]||AI_PROMPTS.full;
+  const prompt=promptFn(ctx);
+  resultDiv.style.display='block';
+  resultDiv.innerHTML=`<div class="ai-result-card"><div class="ai-result-header"><div class="ai-result-title">${modeLabels[aiMode]||'AI Feedback'}</div><button class="ai-result-copy" onclick="copyAiFeedback()">Copy</button></div><div class="ai-result-body" id="aiResultBody"><span class="ai-cursor"></span></div></div>`;
+  const bodyEl=document.getElementById('aiResultBody');
+  let full='';
   try {
     await streamOpenAI(prompt,
-      (chunk) => {
-        full += chunk;
-        bodyEl.innerHTML = formatAiResponse(full) + '<span class="ai-cursor"></span>';
-      },
-      () => {
-        bodyEl.innerHTML = formatAiResponse(full);
-        btn.disabled = false;
-        btn.innerHTML = '✨ Generate My Plan';
-        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      (chunk)=>{ full+=chunk; bodyEl.innerHTML=formatAiResponse(full)+'<span class="ai-cursor"></span>'; },
+      ()=>{ bodyEl.innerHTML=formatAiResponse(full); btn.disabled=false; btn.innerHTML='✨ Generate My Plan'; resultDiv.scrollIntoView({behavior:'smooth',block:'start'}); }
     );
   } catch(err) {
-    bodyEl.innerHTML = `<span style="color:var(--red)">⚠️ Error: ${escHtml(err.message)}</span>`;
-    btn.disabled = false;
-    btn.innerHTML = '✨ Generate My Plan';
+    bodyEl.innerHTML=`<span style="color:var(--red)">⚠️ Error: ${escHtml(err.message)}</span>`;
+    btn.disabled=false; btn.innerHTML='✨ Generate My Plan';
   }
 }
 
 function formatAiResponse(text) {
-  // Convert basic markdown to readable HTML — use backtick strings to avoid quote conflicts
-  const hdr = '<div style="font-family:\'Fraunces\',serif;font-size:16px;font-weight:600;color:#4338ca;margin:16px 0 6px;">$1</div>';
-  const num = '<div style="margin:4px 0 4px 12px;"><span style="color:#6366f1;font-weight:600;">$1</span> $2</div>';
-  const bul = '<div style="margin:3px 0 3px 12px;">\u2022 $1</div>';
+  const hdr='<div style="font-family:\'Fraunces\',serif;font-size:16px;font-weight:600;color:#4338ca;margin:16px 0 6px;">$1</div>';
+  const num='<div style="margin:4px 0 4px 12px;"><span style="color:#6366f1;font-weight:600;">$1</span> $2</div>';
+  const bul='<div style="margin:3px 0 3px 12px;">\u2022 $1</div>';
   return text
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/^#{1,3} (.+)$/gm, hdr)
-    .replace(/^(\d+\.) (.+)$/gm, num)
-    .replace(/^- (.+)$/gm, bul)
-    .replace(/\n\n/g, '<br><br>')
-    .replace(/\n/g, '<br>');
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/^#{1,3} (.+)$/gm,hdr)
+    .replace(/^(\d+\.) (.+)$/gm,num)
+    .replace(/^- (.+)$/gm,bul)
+    .replace(/\n\n/g,'<br><br>')
+    .replace(/\n/g,'<br>');
 }
 
 function copyAiFeedback() {
-  const body = document.getElementById('aiResultBody');
+  const body=document.getElementById('aiResultBody');
   if (!body) return;
-  navigator.clipboard.writeText(body.innerText).then(() => {
-    const btn = document.querySelector('.ai-result-copy');
-    btn.textContent = 'Copied!';
-    setTimeout(() => btn.textContent = 'Copy', 2000);
+  navigator.clipboard.writeText(body.innerText).then(()=>{
+    const btn=document.querySelector('.ai-result-copy');
+    btn.textContent='Copied!'; setTimeout(()=>btn.textContent='Copy',2000);
   });
 }
 
+// ── AI Advisor page ───────────────────────────────────────────────────────────
+async function runAnalysis(type) {
+  const btn=document.getElementById('btn-'+type);
+  const result=document.getElementById('result-'+type);
+  const textEl=document.getElementById('text-'+type);
+  btn.disabled=true; btn.innerHTML='<span class="spinner"></span>Analyzing…';
+  result.classList.add('visible'); textEl.innerHTML='<span class="ai-cursor"></span>';
+  const ctx=buildTaskContext();
+  const promptFn=AI_PROMPTS[type]||AI_PROMPTS.full;
+  let full='';
+  try {
+    await streamOpenAI(promptFn(ctx),
+      (chunk)=>{
+        full+=chunk;
+        textEl.innerHTML=renderMarkdown(full)+'<span class="ai-cursor"></span>';
+        if (type==='burnout') {
+          const m=full.match(/SCORE:\s*(\d+)/);
+          if (m) {
+            const score=Math.min(100,parseInt(m[1]));
+            document.getElementById('score-burnout').style.display='block';
+            document.getElementById('burnout-bar').style.width=score+'%';
+            document.getElementById('burnout-score-label').textContent=score+'%';
+            document.getElementById('burnout-bar').style.background=score>=70?'#B91C1C':score>=40?'#D97706':'#059669';
+          }
+        }
+      },
+      ()=>{ textEl.innerHTML=renderMarkdown(full); btn.disabled=false; btn.innerHTML='↻ Regenerate'; }
+    );
+  } catch(err) {
+    textEl.innerHTML=`<span style="color:var(--red)">⚠️ Error: ${escHtml(err.message)}</span>`;
+    btn.disabled=false; btn.innerHTML='Try Again';
+  }
+}
+
+async function runAllAnalyses() {
+  for (const type of ['burnout','overload','weekly','schedule','gpa']) await runAnalysis(type);
+}
+
+function renderMarkdown(text) {
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/^### (.+)$/gm,'<h3>$1</h3>').replace(/^## (.+)$/gm,'<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/^- (.+)$/gm,'<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g,s=>'<ul>'+s+'</ul>')
+    .replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function fmtDate(ds) { return new Date(ds+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
+function escHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 checkSession();
 </script>
