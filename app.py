@@ -19,7 +19,7 @@ if os.path.exists(_env):
 from database import (
     init_db,
     create_user, authenticate_user, get_user_by_id,
-    get_all_users, delete_user,
+    get_all_users, get_all_users_with_metrics, delete_user,
     create_task, get_tasks_for_user, toggle_task_complete,
     update_postponements, update_task_priority, delete_task,
     tick_overdue_postponements, get_admin_stats,
@@ -33,10 +33,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 @app.errorhandler(Exception)
 def handle_exception(e):
     import traceback
-    tb = traceback.format_exc()
-    print(tb)
-    # Show detail so we can diagnose from the browser error message
-    return jsonify({"error": str(e) or "Server error", "traceback": tb[-300:]}), 500
+    traceback.print_exc()
+    msg = str(e) if str(e) else "Server error"
+    return jsonify({"error": msg}), 500
 
 
 # ── Auth helpers ──────────────────────────────────────────────────────────────
@@ -191,6 +190,15 @@ def admin_delete_user(user_id):
     return jsonify({"message": "User deleted"}), 200
 
 
+@app.route("/api/admin/dashboard", methods=["GET"])
+@admin_required
+def admin_dashboard():
+    return jsonify({
+        "stats": get_admin_stats(),
+        "users": get_all_users_with_metrics(),
+    })
+
+
 # ── Serve frontend ────────────────────────────────────────────────────────────
 
 @app.route("/favicon.ico")
@@ -213,7 +221,25 @@ def serve(path):
 
 if __name__ == "__main__":
     init_db()
-    app.run(debug=True, port=5000, use_reloader=False)
+    # ── Auto-create hardcoded admin account on every startup ──────────────────
+    from database import create_user, get_user_by_email
+    import sqlite3 as _sq3
+    _ADMIN_EMAIL    = "yiqiao.huang@ufl.edu"
+    _ADMIN_PASSWORD = "adminpass1"          # change this to whatever you want
+    # Create if doesn't exist
+    if not get_user_by_email(_ADMIN_EMAIL):
+        create_user(_ADMIN_EMAIL, _ADMIN_PASSWORD, is_admin=True)
+        print(f"[Admin] Created admin account: {_ADMIN_EMAIL}")
+    else:
+        # Make sure is_admin=1 even if account already exists
+        _db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'momentum.db')
+        conn = _sq3.connect(_db_path)
+        conn.execute("UPDATE users SET is_admin = 1 WHERE email = ?", (_ADMIN_EMAIL,))
+        conn.commit()
+        conn.close()
+        print(f"[Admin] Admin account confirmed: {_ADMIN_EMAIL}")
+    # ──────────────────────────────────────────────────────────────────────────
+    app.run(debug=True, port=5000, use_reloader=False, threaded=False)
 
 # ── AI Feedback route ─────────────────────────────────────────────────────────
 
