@@ -12,8 +12,10 @@ _env = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
 if os.path.exists(_env):
     for _line in open(_env):
         _line = _line.strip()
+        # Ignore comments and malformed lines
         if _line and not _line.startswith("#") and "=" in _line:
             _k, _v = _line.split("=", 1)
+            # Only set env variable if not already defined to prevent overrides
             os.environ.setdefault(_k.strip(), _v.strip())
 
 from database import (
@@ -33,9 +35,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 @app.errorhandler(Exception)
 def handle_exception(e):
     import traceback
-    traceback.print_exc()
+    traceback.print_exc() # Logs full stack trace to console for debugging
     msg = str(e) if str(e) else "Server error"
-    return jsonify({"error": msg}), 500
+    return jsonify({"error": msg}), 500 # Always return JSON instead of crashing
 
 
 # ── Auth helpers ──────────────────────────────────────────────────────────────
@@ -43,6 +45,7 @@ def handle_exception(e):
 def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
+        # Ensures users is logged in before accessing proctected routes
         if "user_id" not in session:
             return jsonify({"error": "Not authenticated"}), 401
         return f(*args, **kwargs)
@@ -51,8 +54,11 @@ def login_required(f):
 def admin_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
+        # 1. Check authorization
         if "user_id" not in session:
             return jsonify({"error": "Not authenticated"}), 401
+
+        # 2. Check admin privileges
         user = get_user_by_id(session["user_id"])
         if not user or not user["is_admin"]:
             return jsonify({"error": "Admin access required"}), 403
@@ -88,12 +94,13 @@ def login():
     if not user:
         return jsonify({"error": "Invalid credentials"}), 401
     try:
+        # Updates postponement penalties for overdue tasks at login time
         tick_overdue_postponements(user["id"])
     except Exception as ex:
         print("tick_overdue_postponements failed:", ex)
-    session.clear()
+    session.clear() # Prevent session fixation attacks
     session["user_id"] = user["id"]
-    session.permanent = False
+    session.permanent = False # Session expires after browser closes
     return jsonify({"user": {"id": user["id"], "email": user["email"], "is_admin": bool(user["is_admin"])}}), 200
 
 @app.route("/api/logout", methods=["POST"])
@@ -123,18 +130,25 @@ def add_task():
     due_date = data.get("due_date") or ""
     parent   = data.get("parent_task_id")
     priority = data.get("priority", "medium")
+
+    # Validation checks to maintain clean DB data
     if not title:
         return jsonify({"error": "Title is required"}), 400
     if len(title) > 100:
         return jsonify({"error": "Title max 100 characters"}), 400
+
+    # Ensures strict YYYY-MM-DD format to avoid parsing issues
     if not re.match(r"\d{4}-\d{2}-\d{2}", due_date):
         return jsonify({"error": "due_date must be YYYY-MM-DD"}), 400
+
+    # Create task in DB
     task = create_task(session["user_id"], title, due_date, parent, priority)
     return jsonify(task), 201
 
 @app.route("/api/tasks/<int:task_id>/toggle", methods=["POST"])
 @login_required
 def toggle_task(task_id):
+    # Flips completed status (true <-> false)
     task = toggle_task_complete(task_id, session["user_id"])
     if not task:
         return jsonify({"error": "Task not found"}), 404
@@ -239,6 +253,8 @@ if __name__ == "__main__":
         conn.close()
         print(f"[Admin] Admin account confirmed: {_ADMIN_EMAIL}")
     # ──────────────────────────────────────────────────────────────────────────
+
+    # Debug mode ON for development, should be OFF in production
     app.run(debug=True, port=5000, use_reloader=False, threaded=False)
 
 # ── AI Feedback route ─────────────────────────────────────────────────────────
@@ -249,6 +265,8 @@ def ai_feedback():
     import urllib.request, urllib.error, json as _json, datetime
 
     api_key = os.environ.get("OPENAI_API_KEY", "")
+
+    # Prevent API call if key is missing
     if not api_key or api_key == "YOUR_NEW_KEY_HERE":
         return jsonify({"error": "OpenAI API key not configured. Add it to your .env file."}), 503
 
@@ -261,13 +279,18 @@ def ai_feedback():
     # Build a rich task summary for the prompt
     tasks_raw = context.get("tasks", [])
     total     = len(tasks_raw)
+
+    # Compute useful analytics for prompt engineering
     completed = sum(1 for t in tasks_raw if t.get("completed"))
     overdue   = [t for t in tasks_raw if not t.get("completed") and t.get("due_date","") < today_str]
     upcoming  = [t for t in tasks_raw if not t.get("completed") and t.get("due_date","") >= today_str]
+    
+    # Detect behavioral patterns, important for the AI insight
     postponed = [t for t in tasks_raw if t.get("postponement_count", 0) >= 3]
     high_pri  = [t for t in tasks_raw if t.get("priority") == "high" and not t.get("completed")]
 
     def fmt_task(t):
+        # Formats tasks into readable bullet points for LLM prompt
         p = t.get("postponement_count", 0)
         return f"- [{t.get('priority','medium').upper()}] \"{t.get('title','')}\" due {t.get('due_date','')}{'  ⚠️ postponed '+str(p)+'x' if p >= 3 else ''}"
 
@@ -328,8 +351,8 @@ Be specific — reference actual task names from the list above."""
             {"role": "system", "content": system_prompt},
             {"role": "user",   "content": user_prompt},
         ],
-        "max_tokens": 1200,
-        "temperature": 0.7,
+        "max_tokens": 1200, # Prevent overly long responses
+        "temperature": 0.7, # Balanced creativity vs determinism
     }).encode("utf-8")
 
     req = urllib.request.Request(
@@ -347,8 +370,12 @@ Be specific — reference actual task names from the list above."""
             result = _json.loads(resp.read().decode("utf-8"))
             text = result["choices"][0]["message"]["content"]
             return jsonify({"feedback": text})
+
+    # Handles API-specific errors
     except urllib.error.HTTPError as e:
         body = e.read().decode("utf-8")
         return jsonify({"error": f"OpenAI error: {body}"}), 502
+
+    # Handles general failures
     except Exception as e:
         return jsonify({"error": str(e)}), 502
