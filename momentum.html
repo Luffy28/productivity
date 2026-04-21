@@ -733,7 +733,9 @@ BREAKDOWN MODAL
 
 <script>
   // ─── State ───────────────────────────────────────────────────────
+  // Stores the current logged-in user
   let currentUser = null;
+  // Today's date in YYYY-MM-DD format, used for overdue checks and defaults
   const today = new Date().toISOString().split('T')[0];
 
   let tasks = [
@@ -743,10 +745,15 @@ BREAKDOWN MODAL
     { id: 4, title: "Outline research paper intro", due: addDays(today, 3), completed: false, postponements: 0, parentId: null },
     { id: 5, title: "Email professor about extension", due: addDays(today, -1), completed: true,  postponements: 0, parentId: null },
   ];
+
+  // Keeps track of the next unique task ID for newly created tasks
   let nextId = 6;
+
+  // Stores the ID of the task currently being suggested for breakdown
   let pendingBreakdownId = null;
 
   function addDays(dateStr, n) {
+    // Utility: add or substract days from a YYYY-MM-DD date string
     const d = new Date(dateStr);
     d.setDate(d.getDate() + n);
     return d.toISOString().split('T')[0];
@@ -775,6 +782,7 @@ BREAKDOWN MODAL
 
   function doLogout() {
     currentUser = null;
+    // Show login page again
     document.getElementById('mainApp').style.display = 'none';
     document.getElementById('authPage').style.display = 'flex';
     document.getElementById('authEmail').value = '';
