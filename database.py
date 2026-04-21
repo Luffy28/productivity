@@ -12,8 +12,12 @@ DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "momentum.db"
 
 
 def get_db():
+    # Create a new DB connection per call to avoid threading issues in Flask
     conn = sqlite3.connect(DB_PATH, check_same_thread=False)
+    # Allows accessing columns like dicts instead of tuples
     conn.row_factory = sqlite3.Row
+
+    # Enforce foreign key constraints
     conn.execute("PRAGMA foreign_keys = ON")
     return conn
 
@@ -23,7 +27,7 @@ def init_db():
     conn.executescript("""
         CREATE TABLE IF NOT EXISTS users (
             id            INTEGER PRIMARY KEY AUTOINCREMENT,
-            email         TEXT    NOT NULL UNIQUE COLLATE NOCASE,
+            email         TEXT    NOT NULL UNIQUE COLLATE NOCASE, -- case-insensitive uniqueness
             password_hash TEXT    NOT NULL,
             salt          TEXT    NOT NULL,
             is_admin      INTEGER NOT NULL DEFAULT 0,
@@ -33,12 +37,12 @@ def init_db():
         CREATE TABLE IF NOT EXISTS tasks (
             id                 INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id            INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-            title              TEXT    NOT NULL CHECK(length(title) <= 100),
+            title              TEXT    NOT NULL CHECK(length(title) <= 100), -- enforce max length
             due_date           TEXT    NOT NULL,
             completed          INTEGER NOT NULL DEFAULT 0,
             completed_at       TEXT,
             postponement_count INTEGER NOT NULL DEFAULT 0,
-            parent_task_id     INTEGER REFERENCES tasks(id) ON DELETE CASCADE,
+            parent_task_id     INTEGER REFERENCES tasks(id) ON DELETE CASCADE, -- supports subtasks
             priority           TEXT    NOT NULL DEFAULT 'medium',
             created_at         TEXT    NOT NULL DEFAULT (datetime('now'))
         );
@@ -50,13 +54,18 @@ def init_db():
     conn.commit()
     conn.close()
     print("[DB] Ready: " + DB_PATH)
+
+    # Run migrations after ensuring base schema exists
     _migrate()
 
 
 def _migrate():
+    # Handles schema updates without dropping the DB 
     conn = get_db()
     try:
         cols = [row[1] for row in conn.execute("PRAGMA table_info(tasks)").fetchall()]
+
+        # If priority column doesn't exist, add it
         if "priority" not in cols:
             conn.execute("ALTER TABLE tasks ADD COLUMN priority TEXT NOT NULL DEFAULT 'medium'")
             conn.commit()
@@ -70,21 +79,24 @@ def _migrate():
 # ── Password helpers ──────────────────────────────────────────────────────────
 
 def _hash_password(password, salt):
+    # PBDKDF2 = slow hashing to protect agaisnt brute force attacks
     dk = hashlib.pbkdf2_hmac(
         "sha256",
         password.encode("utf-8"),
         salt.encode("utf-8"),
-        iterations=260000,
+        iterations=260000, # high iteration count = stronger security
     )
     return dk.hex()
 
 
 def hash_password(password):
+    # Generate a secure random salt to prevent rainbow table attacks
     salt = secrets.token_hex(32)
     return _hash_password(password, salt), salt
 
 
 def verify_password(password, stored_hash, salt):
+    # Constant-time comparison prevents timing attacks
     return secrets.compare_digest(_hash_password(password, salt), stored_hash)
 
 
@@ -95,13 +107,16 @@ def create_user(email, password, is_admin=False):
     try:
         conn = get_db()
         cur = conn.execute(
+            # Normalize email (lowercase + trim) to avoid duplicates
             "INSERT INTO users (email, password_hash, salt, is_admin) VALUES (?, ?, ?, ?)",
             (email.lower().strip(), pw_hash, salt, int(is_admin)),
         )
         conn.commit()
-        uid = cur.lastrowid
+        uid = cur.lastrowid # Get auto-generated user ID
         conn.close()
         return get_user_by_id(uid)
+
+    # IF email already exists
     except sqlite3.IntegrityError:
         return None
 
@@ -149,6 +164,7 @@ def delete_user(user_id):
 # ── Task helpers ──────────────────────────────────────────────────────────────
 
 def create_task(user_id, title, due_date, parent_task_id=None, priority="medium"):
+    # Enforce allowed priority values
     if priority not in ("high", "medium", "low"):
         priority = "medium"
     conn = get_db()
@@ -157,7 +173,7 @@ def create_task(user_id, title, due_date, parent_task_id=None, priority="medium"
         (user_id, title.strip(), due_date, parent_task_id, priority),
     )
     conn.commit()
-    tid = cur.lastrowid
+    tid = cur.lastrowid # Get new task ID
     conn.close()
     return get_task_by_id(tid)
 
@@ -181,9 +197,11 @@ def get_tasks_for_user(user_id):
 
 def toggle_task_complete(task_id, user_id):
     task = get_task_by_id(task_id)
+
+    # Ensure user owns the task (basic authorization check)
     if not task or task["user_id"] != user_id:
         return None
-    now_complete = not bool(task["completed"])
+    now_complete = not bool(task["completed"]) # flip status
     conn = get_db()
     conn.execute(
         """UPDATE tasks
@@ -200,6 +218,8 @@ def toggle_task_complete(task_id, user_id):
 
 def update_postponements(task_id):
     conn = get_db()
+
+    # Increment postponement count (used for burnout/AI insights)
     conn.execute(
         "UPDATE tasks SET postponement_count = postponement_count + 1 WHERE id = ?",
         (task_id,),
@@ -235,6 +255,8 @@ def delete_task(task_id, user_id):
 def tick_overdue_postponements(user_id):
     try:
         conn = get_db()
+
+        # Automatically penalize overdue incomplete tasks
         cur = conn.execute(
             """UPDATE tasks SET postponement_count = postponement_count + 1
                WHERE user_id = ? AND completed = 0 AND due_date < date('now')""",
