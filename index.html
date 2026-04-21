@@ -602,35 +602,47 @@
 </div>
 
 <script>
-const API = '';
-let currentUser      = null;
-let tasks            = [];
-let pendingWarnId    = null;
-let authMode         = 'login';
-let selectedPriority = 'medium';
-let activeFilter     = 'all';
-let currentView      = 'list';
-let currentPage      = 'dashboard';
-let calYear          = new Date().getFullYear();
-let calMonth         = new Date().getMonth();
-let selectedDay      = null;
-let aiMode           = 'full';
+const API = ''; // Empty base URL means requests go to the same Flask server origin
+let currentUser      = null; // Logged-in user object from backend
+let tasks            = []; // In-memory copy of all tasks for current user
+let pendingWarnId    = null; // Stores task id that triggered breakdown model
+let authMode         = 'login'; // Tracks whether auth form is in login or register mode
+let selectedPriority = 'medium'; // Default priority for new tasks
+let activeFilter     = 'all'; // Current task filter tab
+let currentView      = 'list'; // Current dashboard subview: list | calendar | ai
+let currentPage      = 'dashboard'; // Top-level page state: dashboard | ai
+let calYear          = new Date().getFullYear(); // Calendar year currently displayed
+let calMonth         = new Date().getMonth(); // Calendar month currently displayed
+let selectedDay      = null; // Selected day in calendar detail panel
+let aiMode           = 'full'; // Selected AI coach mode
+
+// Today's date in YYYY-MM-DD format for comparisons against task due dates
 const today = new Date().toISOString().split('T')[0];
 
 // ── API ───────────────────────────────────────────────────────────────────────
+
+// Centralized wrapper for all backend API calls
 async function api(method, path, body) {
+  // if user opened index.html directly as file, fetch won't work with Flask routes
   if (location.protocol === 'file:') { showServerError(); return { ok:false, status:0, data:{error:'Not connected'} }; }
   try {
-    const opts = { method, headers:{'Content-Type':'application/json'}, credentials:'include' };
+    const opts = { method, headers:{'Content-Type':'application/json'}, credentials:'include' }; // important: sends session cookie for login-based auth
+    
+    //only attach request body if provided
     if (body) opts.body = JSON.stringify(body);
+
+    // abort slow requests after 8 seconds so UI doesn't hang forever
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 8000);
     opts.signal = controller.signal;
     const res  = await fetch(API + path, opts);
     clearTimeout(timer);
+
+    // Try parsing JSON safely even if backend returns empty or invalid response
     const data = await res.json().catch(() => ({}));
     return { ok: res.ok, status: res.status, data };
   } catch(err) {
+    // Networl / timeout / fetch failure
     showServerError();
     return { ok:false, status:0, data:{error:'Cannot connect to server'} };
   }
@@ -650,8 +662,12 @@ function showServerError() {
 // ── Auth ──────────────────────────────────────────────────────────────────────
 function switchTab(mode) {
   authMode = mode;
+
+  // Visually toggle login vs register tab
   document.getElementById('tabLogin').classList.toggle('active', mode==='login');
   document.getElementById('tabRegister').classList.toggle('active', mode==='register');
+
+  // Update button label to match current auth action
   document.getElementById('authSubmit').textContent = mode==='login' ? 'Log In' : 'Create Account';
   hideAuthMsgs();
 }
@@ -665,8 +681,11 @@ function showAuthSuccess(msg) { const el=document.getElementById('authSuccess');
 async function handleAuth() {
   const email = document.getElementById('authEmail').value.trim();
   const pass  = document.getElementById('authPass').value;
+  
   hideAuthMsgs();
+  
   if (authMode === 'register') {
+    // Basic client-side validation before hitting backend
     if (!email.includes('@')) return showAuthError('Enter a valid email.');
     if (pass.length < 8)      return showAuthError('Password must be 8+ characters.');
     const r = await api('POST', '/api/register', { email, password: pass });
@@ -676,6 +695,8 @@ async function handleAuth() {
   } else {
     const r = await api('POST', '/api/login', { email, password: pass });
     if (!r.ok) return showAuthError(r.data.error || 'Login failed.');
+
+    // Save logged-in user returned by backend
     currentUser = r.data.user;
     enterApp();
   }
@@ -697,16 +718,24 @@ async function doLogout() {
 }
 
 async function checkSession() {
+  // On page load, ask backend whether a session cookie already exists
   const r = await api('GET', '/api/me');
   if (r.ok) { currentUser = r.data; enterApp(); }
-  else document.getElementById('authPage').classList.add('visible');
+  else document.getElementById('authPage').classList.add('visible'); // No session: show auth screen
 }
 
 function enterApp() {
+  // Hide auth screen and show dashboard
   document.getElementById('authPage').classList.remove('visible');
   document.getElementById('mainApp').style.display = 'block';
+
+  // Personalize navbar with current user's email
   document.getElementById('navEmail').textContent = currentUser.email;
+
+  // Only admins see admin panel button
   if (currentUser.is_admin) document.getElementById('adminLink').style.display = 'inline-block';
+  
+  // Default new task date to today for convenience
   document.getElementById('newDue').value = today;
   loadTasks();
 }
@@ -717,14 +746,21 @@ document.getElementById('authPass').addEventListener('keydown', e => { if(e.key=
 async function loadTasks() {
   const r = await api('GET', '/api/tasks');
   if (!r.ok) return;
+
+  // Replace local task cache with fresh data from backend
   tasks = r.data;
+  
   renderAll();
+  // If any task has been postponed 3+ times, prompt user to break it down
   const warned = tasks.find(t => t.postponement_count >= 3 && !t.completed);
   if (warned) { pendingWarnId = warned.id; setTimeout(() => showBreakdownModal(warned), 600); }
 }
 
 function renderAll() {
+  // Re-render all dashboard sections derived from tasks[]
   renderStreak(); renderTasks(); renderStats();
+
+  // Calendar only needs rerendering if currently visible
   if (currentView === 'calendar') renderCalendar();
 }
 
@@ -755,15 +791,24 @@ function renderStreak() {
 function renderTasks() {
   const list = document.getElementById('taskList');
   list.innerHTML = '';
+
+  // Custom priority sort order instead of alphabetical order
   const pOrder = { high:0, medium:1, low:2 };
+
+  // Apply current filter tab
   const filtered = activeFilter === 'all' ? tasks : tasks.filter(t => (t.priority||'medium') === activeFilter);
+  
+  // Sort by priority first, then by due date
   const sorted = [...filtered].sort((a,b) => {
     const pd = (pOrder[a.priority||'medium']||1) - (pOrder[b.priority||'medium']||1);
     return pd !== 0 ? pd : a.due_date.localeCompare(b.due_date);
   });
+  
   const incomplete = tasks.filter(t => !t.completed).length;
   document.getElementById('taskCountLabel').textContent = `${incomplete} task${incomplete!==1?'s':''}`;
+ 
   if (!sorted.length) {
+    // Empty-state UI if there are no tasks in this filter
     list.innerHTML = `<div class="empty-state"><div class="empty-emoji">📝</div><div class="empty-title">${activeFilter==='all'?'No tasks yet!':'No '+activeFilter+' priority tasks.'}</div><div class="empty-sub">${activeFilter==='all'?'Create one to get started.':''}</div></div>`;
     return;
   }
@@ -774,8 +819,11 @@ function renderTasks() {
     const isWarned  = t.postponement_count >= 3;
     const card = document.createElement('div');
     card.className = `task-card pri-${pri}${t.completed?' completed':''}${isWarned&&!t.completed?' warned':''}`;
+    // Stagger animation timing slightly for nicer UI feel
     card.style.animationDelay = `${i*0.04}s`;
     const dueLabel = t.due_date===today ? '📅 Due today' : `📅 ${fmtDate(t.due_date)}`;
+    
+    // escHTML prevents task titles from injecting raw HTML into the page
     card.innerHTML = `
       <div class="task-checkbox${t.completed?' checked':''}" onclick="toggleTask(${t.id})"></div>
       <div class="task-body">
@@ -823,6 +871,7 @@ function setFilter(f) {
 }
 
 async function changePriority(e, id, priority) {
+  // Prevent click from affecting parent card behavior
   e.stopPropagation();
   const r = await api('PATCH', `/api/tasks/${id}/priority`, { priority });
   if (!r.ok) return;
@@ -835,19 +884,25 @@ async function toggleTask(id) {
   const r = await api('POST', `/api/tasks/${id}/toggle`);
   if (!r.ok) return;
   const idx = tasks.findIndex(t => t.id===id);
-  if (idx > -1) tasks[idx] = r.data;
+  if (idx > -1) tasks[idx] = r.data; // replace updated task in local cache
   renderAll();
 }
 
 async function addTask() {
   const title = document.getElementById('newTitle').value.trim();
   const due   = document.getElementById('newDue').value;
+
+  // Minimal client-side validation
   if (!title || !due) return alert('Please enter a title and due date.');
+
+  // Temporary loading state so user sees something is happening
   document.getElementById('saveBtn').innerHTML = '<span class="spinner"></span>Saving…';
   const r = await api('POST', '/api/tasks', { title, due_date:due, priority:selectedPriority });
   document.getElementById('saveBtn').textContent = 'Save Task';
   if (!r.ok) return alert(r.data.error || 'Failed to save task.');
-  tasks.push(r.data);
+  // Update local state instead of refetching everything
+  tasks.push(r.data); 
+  // Reset form after successful save
   document.getElementById('newTitle').value = '';
   document.getElementById('addTaskForm').classList.remove('visible');
   selectPriority('medium');
@@ -858,6 +913,7 @@ async function removeTask(id) {
   if (!confirm('Delete this task?')) return;
   const r = await api('DELETE', `/api/tasks/${id}`);
   if (!r.ok) return alert('Failed to delete task.');
+  // Remove deleted task from local list
   tasks = tasks.filter(t => t.id !== id);
   renderAll();
 }
@@ -871,16 +927,23 @@ function toggleAddForm() {
 
 // ── Breakdown ─────────────────────────────────────────────────────────────────
 function showBreakdownModal(task) {
+  // Encourages user to split repeatedly-postponed tasks into smaller steps
   document.getElementById('breakdownDesc').textContent = `You've postponed "${task.title}" ${task.postponement_count} times. Would you like to break it into smaller, more manageable steps?`;
   document.getElementById('breakdownModal').classList.add('visible');
 }
 function closeModal() { document.getElementById('breakdownModal').classList.remove('visible'); pendingWarnId = null; }
 async function breakdownTask() {
   closeModal();
+  
+  // Simple prompt-based UX for quick subtask creation
   const sub = prompt('Enter 2–5 subtask titles separated by commas:');
   if (!sub || !pendingWarnId) return;
   const parent = tasks.find(t => t.id===pendingWarnId);
+
+  // Clean and limit user input
   const titles = sub.split(',').map(s=>s.trim()).filter(Boolean).slice(0,5);
+
+  // Create each subtask using same due date and priority as parent
   for (const title of titles) {
     const r = await api('POST', '/api/tasks', { title, due_date:parent.due_date, parent_task_id:parent.id, priority:parent.priority });
     if (r.ok) tasks.push(r.data);
@@ -910,17 +973,25 @@ function renderCalendar() {
   document.getElementById('calMonthLabel').textContent = `${months[calMonth]} ${calYear}`;
   const grid = document.getElementById('calGrid');
   grid.innerHTML = '';
+
+  // Add weekday headers first
   ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d => {
     const h = document.createElement('div'); h.className='cal-day-header'; h.textContent=d; grid.appendChild(h);
   });
+
+  // Group tasks by due date for fast lookup while building cells
   const taskMap = {};
   tasks.forEach(t => { if (!taskMap[t.due_date]) taskMap[t.due_date]=[]; taskMap[t.due_date].push(t); });
   const firstDay = new Date(calYear,calMonth,1).getDay();
   const daysInMonth = new Date(calYear,calMonth+1,0).getDate();
   const daysInPrev  = new Date(calYear,calMonth,0).getDate();
+
+  // Fill enough rows to complete full weeks
   const totalCells = Math.ceil((firstDay+daysInMonth)/7)*7;
   for (let i=0; i<totalCells; i++) {
     let day, monthOffset=0;
+
+    // Determine whether cell belongs to previous, current, or next month
     if (i<firstDay) { day=daysInPrev-firstDay+1+i; monthOffset=-1; }
     else if (i>=firstDay+daysInMonth) { day=i-firstDay-daysInMonth+1; monthOffset=1; }
     else day=i-firstDay+1;
@@ -932,6 +1003,7 @@ function renderCalendar() {
     cell.className='cal-cell'+(isOther?' other-month':'')+(isToday?' today':'')+(isSelected?' selected':'');
     cell.onclick=()=>selectDay(ds);
     const dateEl=document.createElement('div'); dateEl.className='cal-date'; dateEl.textContent=day; cell.appendChild(dateEl);
+    // Show max + tasks inside a cell to avoid overflow
     dayTasks.slice(0,3).forEach(t => {
       const dot=document.createElement('div');
       dot.className=`cal-task-dot pri-${t.priority||'medium'}${t.completed?' done':''}`;
@@ -1099,6 +1171,8 @@ function buildTaskContext() {
   const completed=tasks.filter(t=>t.completed);
   const overdue=incomplete.filter(t=>t.due_date<today);
   const postponed=incomplete.filter(t=>t.postponement_count>=3);
+
+  // Convert incomplete tasks into a compact text summary for the AI prompt
   const taskLines=incomplete.map(t=>{
     const daysUntil=Math.ceil((new Date(t.due_date)-todayD)/86400000);
     const rel=daysUntil<0?`${Math.abs(daysUntil)} days OVERDUE`:daysUntil===0?'due TODAY':`due in ${daysUntil} days`;
@@ -1118,6 +1192,8 @@ ${completed.filter(t=>{if(!t.completed_at)return false;return(todayD-new Date(t.
 }
 
 // ── AI Prompts ────────────────────────────────────────────────────────────────
+
+// Centralized prompt libary, each mode produces a different coaching behavior using the same task context
 const AI_PROMPTS = {
   full: (ctx) => `You are an academic coach. Give a fast, concise analysis. Keep each section SHORT — 2-3 sentences max.
 
@@ -1197,6 +1273,8 @@ Be detailed, specific, and actionable.`
 // ── OpenAI streaming ──────────────────────────────────────────────────────────
 async function streamOpenAI(prompt, onChunk, onDone) {
   const key=getApiKey();
+
+  // Direct browser-to-OpeanAI request using stored API key
   const res=await fetch('https://api.openai.com/v1/chat/completions', {
     method:'POST',
     headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},
@@ -1250,6 +1328,8 @@ async function runAiFeedback() {
   const btn=document.getElementById('aiRunBtn');
   const resultDiv=document.getElementById('aiResult');
   const key=getApiKey();
+
+  // Block use if no browser-stored key exists
   if (!key) {
     resultDiv.style.display='block';
     resultDiv.innerHTML=`<div class="ai-result-card" style="border-color:var(--red-pale);"><div style="color:var(--red);font-weight:600;">🔑 OpenAI Key Required</div><div style="margin-top:8px;font-size:14px;color:var(--brown-mid);">Click <strong>🤖 AI Advisor</strong> in the nav bar to connect your key.</div></div>`;
@@ -1349,9 +1429,16 @@ function renderMarkdown(text) {
 }
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
-function fmtDate(ds) { return new Date(ds+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}); }
-function escHtml(str) { return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmtDate(ds) { 
+  // Converts YYYY-MM-DD into friendly short format like "Apr 20"
+  return new Date(ds+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}); 
+}
+function escHtml(str) { 
+  // Prevents HTML injection when inserting user-rpovided text into the DOM
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); 
+}
 
+// Entry point: decide whether to show auth or dashboard based on session 
 checkSession();
 </script>
 </body>
